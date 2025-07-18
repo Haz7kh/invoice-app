@@ -33,3 +33,47 @@ export async function createClient(clientData) {
     body: JSON.stringify(clientData),
   });
 }
+
+export async function getCurrentUserData() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const res = await fetch("http://localhost:3000/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch user");
+    }
+
+    const data = await res.json();
+    return data; // Expecting { name, company, ... }
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
+}
+
+export async function getCompany() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const res = await fetch("http://localhost:3000/api/companies", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch company");
+
+    const data = await res.json();
+    return data; // Contains companyName, etc.
+  } catch (error) {
+    console.error("Company fetch error:", error);
+    return null;
+  }
+}

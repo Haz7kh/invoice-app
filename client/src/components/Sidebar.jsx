@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   HiHome,
@@ -8,7 +8,9 @@ import {
   HiShoppingBag,
   HiCog,
 } from "react-icons/hi";
+
 import logo from "../assets/Invoicelogowhite.svg";
+import { getCurrentUserData, getCompany } from "../services/api"; // ✅ API call
 
 const navItems = [
   { name: "Overview", path: "/overview", icon: <HiHome size={20} /> },
@@ -24,8 +26,28 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const [user, setUser] = useState(null);
+  const [company, setCompany] = useState(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const data = await getCurrentUserData();
+      const companyData = await getCompany();
+      setUser(data);
+      setCompany(companyData);
+    };
+    fetchUser();
+  }, []);
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : "??";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -60,12 +82,16 @@ export default function Sidebar() {
           className="flex items-center space-x-3 w-full"
           onClick={() => setUserDropdownOpen(!userDropdownOpen)}
         >
-          <div className="rounded-full bg-gray-600 h-8 w-8 flex items-center justify-center">
-            KA
+          <div className="rounded-full bg-gray-600 h-8 w-8 flex items-center justify-center font-semibold">
+            {initials}
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-sm font-semibold">Khaled A</span>
-            <span className="text-xs text-gray-400">Stocktak AB</span>
+            <span className="text-sm font-semibold">
+              {user?.name || "Unknown"}
+            </span>
+            <span className="text-xs text-gray-400">
+              {company?.companyName || "No Company"}
+            </span>
           </div>
           <svg
             className={`ml-auto h-4 w-4 transition-transform ${

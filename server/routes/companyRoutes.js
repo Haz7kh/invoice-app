@@ -1,14 +1,15 @@
 const express = require("express");
-const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
 const {
   saveCompany,
   getCompany,
-  deleteCompany,
   updateCompany,
+  deleteCompany,
 } = require("../controllers/companyController");
 
-router.route("/").post(protect, saveCompany).get(protect, getCompany);
+const router = express.Router();
+
+router.route("/").get(protect, getCompany).post(protect, saveCompany);
 
 router.route("/:id").put(protect, updateCompany).delete(protect, deleteCompany);
 

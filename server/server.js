@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/invoices", invoiceRoutes);
-app.use("/api/company", companyRoutes);
+app.use("/api/companies", companyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

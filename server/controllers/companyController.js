@@ -1,10 +1,12 @@
 const Company = require("../models/Company");
 const asyncHandler = require("express-async-handler");
 
-// @desc    Create or update company info for user
-// @route   POST /api/company
-// @access  Private
-const saveCompany = async (req, res) => {
+/**
+ * @desc    Create or update the logged-in user's company
+ * @route   POST /api/companies
+ * @access  Private
+ */
+const saveCompany = asyncHandler(async (req, res) => {
   const {
     type,
     companyName,
@@ -16,10 +18,14 @@ const saveCompany = async (req, res) => {
     billingAddress,
   } = req.body;
 
+  if (!type || !companyName) {
+    res.status(400);
+    throw new Error("Type and company name are required");
+  }
+
   const existing = await Company.findOne({ user: req.user._id });
 
   if (existing) {
-    // update
     existing.type = type;
     existing.companyName = companyName;
     existing.orgNumber = orgNumber;
@@ -28,11 +34,11 @@ const saveCompany = async (req, res) => {
     existing.sendBy = sendBy;
     existing.attachPdf = attachPdf;
     existing.billingAddress = billingAddress;
+
     const updated = await existing.save();
     return res.status(200).json(updated);
   }
 
-  // create
   const newCompany = await Company.create({
     user: req.user._id,
     type,
@@ -46,22 +52,29 @@ const saveCompany = async (req, res) => {
   });
 
   res.status(201).json(newCompany);
-};
+});
 
-// @desc    Get logged-in user's company info
-// @route   GET /api/company
-// @access  Private
-const getCompany = async (req, res) => {
+/**
+ * @desc    Get the logged-in user's company
+ * @route   GET /api/companies
+ * @access  Private
+ */
+const getCompany = asyncHandler(async (req, res) => {
   const company = await Company.findOne({ user: req.user._id });
-  if (!company) {
-    return res.status(404).json({ message: "No company found" });
-  }
-  res.status(200).json(company);
-};
 
-// @desc    Update a company
-// @route   PUT /api/customers/:id
-// @access  Private
+  if (!company) {
+    res.status(404);
+    throw new Error("No company found for this user");
+  }
+
+  res.status(200).json(company);
+});
+
+/**
+ * @desc    Update a specific company by ID (admin or multi-company logic)
+ * @route   PUT /api/companies/:id
+ * @access  Private
+ */
 const updateCompany = asyncHandler(async (req, res) => {
   const company = await Company.findById(req.params.id);
 
@@ -70,7 +83,6 @@ const updateCompany = asyncHandler(async (req, res) => {
     throw new Error("Company not found");
   }
 
-  // Make sure the logged-in user owns the company
   if (company.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error("Not authorized");
@@ -81,12 +93,14 @@ const updateCompany = asyncHandler(async (req, res) => {
     runValidators: true,
   });
 
-  res.json(updated);
+  res.status(200).json(updated);
 });
 
-// @desc    Delete a company
-// @route   DELETE /api/customers/:id
-// @access  Private
+/**
+ * @desc    Delete a specific company by ID
+ * @route   DELETE /api/companies/:id
+ * @access  Private
+ */
 const deleteCompany = asyncHandler(async (req, res) => {
   const company = await Company.findById(req.params.id);
 
@@ -95,13 +109,12 @@ const deleteCompany = asyncHandler(async (req, res) => {
     throw new Error("Company not found");
   }
 
-  // Check ownership
   if (company.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error("Not authorized");
   }
 
-  await company.remove();
+  await company.deleteOne();
 
   res.json({ message: "Company removed" });
 });
@@ -109,6 +122,6 @@ const deleteCompany = asyncHandler(async (req, res) => {
 module.exports = {
   saveCompany,
   getCompany,
-  deleteCompany,
   updateCompany,
+  deleteCompany,
 };
