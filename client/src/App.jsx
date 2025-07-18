@@ -10,6 +10,7 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Overview from "./pages/Overview";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Register from "./pages/Register";
 
 export default function App() {
   const token = localStorage.getItem("token");
@@ -26,7 +27,9 @@ export default function App() {
       <main className="flex-grow bg-gray-100 p-6">
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
+
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/overview"
             element={

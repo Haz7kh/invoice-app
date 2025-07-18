@@ -33,11 +33,19 @@ export default function Sidebar() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const data = await getCurrentUserData();
-      const companyData = await getCompany();
-      setUser(data);
-      setCompany(companyData);
+      const userData = await getCurrentUserData();
+
+      let companyData = null;
+      try {
+        companyData = await getCompany();
+      } catch (error) {
+        console.log("No company found yet", error);
+      }
+
+      setUser(userData);
+      setCompany(companyData); // null if user has no company
     };
+
     fetchUser();
   }, []);
 

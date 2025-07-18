@@ -68,10 +68,11 @@ export async function getCompany() {
       },
     });
 
+    if (res.status === 404) return null; // ✅ no company yet, not a real error
     if (!res.ok) throw new Error("Failed to fetch company");
 
     const data = await res.json();
-    return data; // Contains companyName, etc.
+    return data;
   } catch (error) {
     console.error("Company fetch error:", error);
     return null;
