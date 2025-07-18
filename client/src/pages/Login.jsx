@@ -28,7 +28,7 @@ export default function Login() {
       localStorage.setItem("token", result.token);
 
       // Redirect after successful login
-      navigate("/overview"); // Change to your actual route
+      navigate("/"); // Change to your actual route
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
     }

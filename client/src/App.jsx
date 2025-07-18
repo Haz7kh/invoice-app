@@ -20,7 +20,7 @@ export default function App() {
       <main className="flex-grow bg-gray-100 p-6">
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/overview" element={<Overview />} />
+          <Route path="/" element={<Overview />} />
           <Route path="/clients" element={<Clients />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/orders" element={<Orders />} />
