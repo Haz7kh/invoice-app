@@ -24,10 +24,7 @@ export default function CompanyInput({ onSuccess }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleSubmit = async (e) => {
@@ -36,7 +33,7 @@ export default function CompanyInput({ onSuccess }) {
     setSuccess(false);
 
     const payload = {
-      type: "company", // required
+      type: "company",
       companyName: form.name,
       orgNumber: form.regNo,
       vatNumber: form.vatNo,
@@ -54,7 +51,6 @@ export default function CompanyInput({ onSuccess }) {
 
     try {
       const token = localStorage.getItem("token");
-
       const res = await fetch("http://localhost:3000/api/companies", {
         method: "POST",
         headers: {
@@ -77,52 +73,72 @@ export default function CompanyInput({ onSuccess }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-xl font-semibold text-green-700">Company settings</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="p-6 bg-white rounded-xl shadow-md space-y-8"
+    >
+      {/* Title */}
+      <h2 className="text-2xl font-bold text-gray-800 border-b pb-2">
+        Company Details
+      </h2>
+
+      {/* General Info */}
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label>Company name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Company name
+          </label>
           <input
             name="name"
             value={form.name}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm focus:outline-green-500"
           />
         </div>
+
         <div>
-          <label>Company reg. no.</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Company reg. no.
+          </label>
           <input
             name="regNo"
             value={form.regNo}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Vat no.</label>
+          <label className="block text-sm font-medium text-gray-700">
+            VAT no.
+          </label>
           <input
             name="vatNo"
             value={form.vatNo}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Company seat</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Company seat
+          </label>
           <input
             name="seat"
             value={form.seat}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
-        <div className="col-span-2">
-          <label className="block mb-1">
-            Does your company hold an F-tax certificate?
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            F-tax certificate
           </label>
-          <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2">
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
               <input
                 type="radio"
                 name="fTax"
@@ -132,7 +148,7 @@ export default function CompanyInput({ onSuccess }) {
               />
               Yes
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
               <input
                 type="radio"
                 name="fTax"
@@ -146,51 +162,66 @@ export default function CompanyInput({ onSuccess }) {
         </div>
       </div>
 
-      <h2 className="text-xl font-semibold text-green-700">Address</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Address Section */}
+      <h3 className="text-xl font-semibold text-gray-800 border-b pb-1">
+        Billing Address
+      </h3>
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label>C/O</label>
+          <label className="block text-sm font-medium text-gray-700">C/O</label>
           <input
             name="c_o"
             value={form.c_o}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Address</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Address
+          </label>
           <input
             name="address"
             value={form.address}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Zip Code</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Zip Code
+          </label>
           <input
             name="zip"
             value={form.zip}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>City</label>
+          <label className="block text-sm font-medium text-gray-700">
+            City
+          </label>
           <input
             name="city"
             value={form.city}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
-        <div className="col-span-2">
-          <label>Country</label>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Country
+          </label>
           <select
             name="country"
             value={form.country}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           >
             <option>Sweden</option>
             <option>Norway</option>
@@ -200,68 +231,85 @@ export default function CompanyInput({ onSuccess }) {
         </div>
       </div>
 
-      <h2 className="text-xl font-semibold text-green-700">
+      {/* Contact Info */}
+      <h3 className="text-xl font-semibold text-gray-800 border-b pb-1">
         Contact Information
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      </h3>
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label>Company email</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             name="email"
             value={form.email}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Website</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Website
+          </label>
           <input
             name="website"
             value={form.website}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Phone</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Phone
+          </label>
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
+
         <div>
-          <label>Mobile</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Mobile
+          </label>
           <input
             name="mobile"
             value={form.mobile}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
-        <div>
-          <label>Fax</label>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700">Fax</label>
           <input
             name="fax"
             value={form.fax}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="mt-1 w-full border rounded-lg p-2 shadow-sm"
           />
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        Save Company
-      </button>
-
-      {error && <p className="text-red-600">{error}</p>}
-      {success && (
-        <p className="text-green-600">Company successfully created!</p>
-      )}
+      {/* Submit + Feedback */}
+      <div className="flex items-center justify-between pt-4">
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow"
+        >
+          Save Company
+        </button>
+        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {success && (
+          <p className="text-green-600 text-sm">
+            Company successfully created!
+          </p>
+        )}
+      </div>
     </form>
   );
 }
