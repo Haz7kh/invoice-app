@@ -44,7 +44,7 @@ export default function Header() {
   ];
 
   return (
-    <div className="m-0">
+    <div className="ml-64">
       {/* Top Header */}
       <div className="py-4 px-6 bg-gray-200 shadow-sm">
         <h2 className="text-gray-700 text-3xl font-bold">Overview - Zara</h2>

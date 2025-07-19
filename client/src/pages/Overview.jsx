@@ -6,7 +6,7 @@ export default function Overview() {
   return (
     <>
       <Header />
-      <div className="bg-white py-16 px-6  border-5 shadow-2xl border-white">
+      <div className="bg-white py-16 px-6  border-5 shadow-2xl border-white ml-64">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
           <div className="flex-1">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">

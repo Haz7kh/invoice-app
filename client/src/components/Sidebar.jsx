@@ -63,7 +63,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100">
+    <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100 fixed">
       <div className="p-4 flex items-center space-x-2">
         <img src={logo} alt="Logo" className="h-8 w-auto" />
       </div>
