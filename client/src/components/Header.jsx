@@ -47,7 +47,7 @@ export default function Header() {
     <div className="ml-64">
       {/* Top Header */}
       <div className="py-4 px-6 bg-gray-200 shadow-sm">
-        <h2 className="text-gray-700 text-3xl font-bold">Overview - Zara</h2>
+        <h2 className="text-gray-700 text-3xl font-bold">Overview</h2>
       </div>
 
       {/* Button List */}
@@ -55,7 +55,13 @@ export default function Header() {
         {list.map((elem, index) => (
           <Link
             key={index}
-            to={`/${elem.buttonName}`}
+            to={
+              elem.buttonName === "New client"
+                ? "/clients?new=true"
+                : elem.buttonName === "New invoice"
+                ? "/invoices"
+                : `/${elem.buttonName.toLowerCase().replace(/\s+/g, "-")}`
+            }
             className={`flex items-center gap-2 ${elem.buttonColor} px-4 py-2 rounded-lg shadow hover:shadow-md transition`}
           >
             {elem.buttonIcon}
