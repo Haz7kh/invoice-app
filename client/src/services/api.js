@@ -78,3 +78,43 @@ export async function getCompany() {
     return null;
   }
 }
+
+// invoice create :
+export async function createInvoice(invoiceData) {
+  return request("/invoices", {
+    method: "POST",
+    body: JSON.stringify(invoiceData),
+  });
+}
+
+export async function getInvoices() {
+  return request("/invoices");
+}
+
+// CREATE product
+export async function createProduct(productData) {
+  return request("/products", {
+    method: "POST",
+    body: JSON.stringify(productData),
+  });
+}
+
+// GET all products
+export async function getProducts() {
+  return request("/products");
+}
+
+// DELETE a product by ID
+export async function deleteProduct(productId) {
+  return request(`/products/${productId}`, {
+    method: "DELETE",
+  });
+}
+
+// UPDATE a product by ID
+export async function updateProduct(productId, updatedData) {
+  return request(`/products/${productId}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedData),
+  });
+}

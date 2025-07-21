@@ -1,9 +1,7 @@
 const Invoice = require("../models/Invoice");
+const Product = require("../models/Product");
 
-// @desc    Create a new invoice
-// @route   POST /api/invoices
-// @access  Private
-const createInvoice = async (req, res) => {
+exports.createInvoice = async (req, res) => {
   try {
     const {
       customer,
@@ -19,31 +17,80 @@ const createInvoice = async (req, res) => {
       notes,
     } = req.body;
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({ message: "Invoice must include items" });
+    const user = req.user.id;
+
+    if (
+      !user ||
+      !customer ||
+      !invoiceNumber ||
+      !invoiceDate ||
+      !dueDate ||
+      !items?.length
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Calculate net, VAT, and grand totals
+    // ✅ Duplicate check before proceeding
+    const existing = await Invoice.findOne({ user, invoiceNumber });
+    if (existing) {
+      return res.status(400).json({
+        message: `Invoice number "${invoiceNumber}" already exists for your account.`,
+      });
+    }
+
     let netTotal = 0;
     let vatTotal = 0;
+    const processedItems = [];
 
-    items.forEach((item) => {
-      const qty = item.quantity || 1;
-      const price = item.price || 0;
-      const discount = item.discountPercent || 0;
-      const vat = item.vatPercent || 0;
+    for (const item of items) {
+      let {
+        productId,
+        product,
+        text,
+        quantity,
+        unit,
+        price,
+        vatPercent = 25,
+        discountPercent = 0,
+      } = item;
 
-      const discountedPrice = qty * price * (1 - discount / 100);
-      const vatAmount = discountedPrice * (vat / 100);
+      if (productId) {
+        const prod = await Product.findById(productId);
+        if (!prod) {
+          return res
+            .status(400)
+            .json({ message: `Invalid productId: ${productId}` });
+        }
 
-      netTotal += discountedPrice;
-      vatTotal += vatAmount;
-    });
+        product = prod.name;
+        unit = prod.unit;
+        price = prod.price;
+        vatPercent = prod.tax;
+      }
+
+      const discount = price * quantity * (discountPercent / 100);
+      const net = price * quantity - discount;
+      const vat = net * (vatPercent / 100);
+
+      netTotal += net;
+      vatTotal += vat;
+
+      processedItems.push({
+        productId,
+        product,
+        text,
+        quantity,
+        unit,
+        price,
+        vatPercent,
+        discountPercent,
+      });
+    }
 
     const grandTotal = netTotal + vatTotal;
 
-    const invoice = await Invoice.create({
-      user: req.user._id,
+    const invoice = new Invoice({
+      user,
       customer,
       invoiceNumber,
       invoiceDate,
@@ -53,77 +100,34 @@ const createInvoice = async (req, res) => {
       ourReference,
       language,
       currency,
-      items,
+      items: processedItems,
       netTotal,
       vatTotal,
       grandTotal,
       notes,
     });
 
-    res.status(201).json(invoice);
-  } catch (error) {
-    console.error("Create Invoice Error:", error);
-    res.status(500).json({ message: "Failed to create invoice" });
+    const saved = await invoice.save();
+    const populated = await saved.populate("customer", "companyName email"); // ✅ populate the customer
+    return res.status(201).json(populated);
+  } catch (err) {
+    console.error("💥 Error in createInvoice:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-const getInvoices = async (req, res) => {
+exports.getInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find({ user: req.user._id })
+    const userId = req.user.id; // 🔒 always filter by logged-in user
+    const filter = { user: userId };
+
+    const invoices = await Invoice.find(filter)
       .populate("customer", "companyName email")
       .sort({ createdAt: -1 });
 
     res.json(invoices);
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch invoices" });
   }
-};
-
-// @desc    Update an invoice
-// @route   PUT /api/invoices/:id
-// @access  Private
-const updateInvoice = async (req, res) => {
-  const invoice = await Invoice.findById(req.params.id);
-
-  if (!invoice) {
-    return res.status(404).json({ message: "Invoice not found" });
-  }
-
-  // Check ownership
-  if (invoice.user.toString() !== req.user._id.toString()) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
-
-  const updated = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  res.status(200).json(updated);
-};
-
-// @desc    Delete an invoice
-// @route   DELETE /api/invoices/:id
-// @access  Private
-const deleteInvoice = async (req, res) => {
-  const invoice = await Invoice.findById(req.params.id);
-
-  if (!invoice) {
-    return res.status(404).json({ message: "Invoice not found" });
-  }
-
-  if (invoice.user.toString() !== req.user._id.toString()) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
-
-  await invoice.deleteOne();
-
-  res.status(200).json({ message: "Invoice deleted" });
-};
-
-module.exports = {
-  createInvoice,
-  getInvoices,
-  updateInvoice,
-  deleteInvoice,
 };
