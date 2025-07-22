@@ -16,31 +16,18 @@ const saveCompany = asyncHandler(async (req, res) => {
     sendBy,
     attachPdf,
     billingAddress,
+    bankgiro, // ✅ Include this
   } = req.body;
 
-  if (!type || !companyName) {
-    res.status(400);
-    throw new Error("Type and company name are required");
+  const userId = req.user?._id || req.user || null;
+
+  if (!bankgiro) {
+    console.log("⛔ bankgiro missing in req.body!");
+    return res.status(400).json({ message: "Bankgiro is required" });
   }
 
-  const existing = await Company.findOne({ user: req.user._id });
-
-  if (existing) {
-    existing.type = type;
-    existing.companyName = companyName;
-    existing.orgNumber = orgNumber;
-    existing.vatNumber = vatNumber;
-    existing.email = email;
-    existing.sendBy = sendBy;
-    existing.attachPdf = attachPdf;
-    existing.billingAddress = billingAddress;
-
-    const updated = await existing.save();
-    return res.status(200).json(updated);
-  }
-
-  const newCompany = await Company.create({
-    user: req.user._id,
+  const company = await Company.create({
+    user: userId,
     type,
     companyName,
     orgNumber,
@@ -49,9 +36,10 @@ const saveCompany = asyncHandler(async (req, res) => {
     sendBy,
     attachPdf,
     billingAddress,
+    bankgiro, // ✅ Must be passed here
   });
 
-  res.status(201).json(newCompany);
+  res.status(201).json(company);
 });
 
 /**
@@ -60,14 +48,14 @@ const saveCompany = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const getCompany = asyncHandler(async (req, res) => {
-  const company = await Company.findOne({ user: req.user._id });
+  const companies = await Company.find({ user: req.user._id });
 
-  if (!company) {
+  if (!companies || companies.length === 0) {
     res.status(404);
-    throw new Error("No company found for this user");
+    throw new Error("No companies found for this user");
   }
 
-  res.status(200).json(company);
+  res.status(200).json(companies);
 });
 
 /**

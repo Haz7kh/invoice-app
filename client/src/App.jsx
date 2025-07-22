@@ -11,25 +11,35 @@ import Login from "./pages/Login";
 import Overview from "./pages/Overview";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
+import InvoicePrint from "./pages/InvoicePrint";
+import CompanyList from "./components/companies/CompanyList";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const token = localStorage.getItem("token");
   const location = useLocation();
+
   const isLoginPage =
     location.pathname === "/login" || location.pathname === "/";
+  const isPrintPage = location.pathname.startsWith("/print/");
 
   return (
-    <div className="flex min-h-screen">
-      {/* Show Sidebar only when logged in */}
-      {token && !isLoginPage && <Sidebar />}
+    <div className={`min-h-screen ${isPrintPage ? "" : "flex"}`}>
+      {/* ✅ Sidebar only on authenticated, non-print views */}
+      {token && !isLoginPage && !isPrintPage && <Sidebar />}
 
-      {/* Main content area */}
-      <main className="flex-grow bg-gray-100 p-6">
+      {/* ✅ Main content layout */}
+      <main
+        className={`flex-grow bg-gray-100 p-6 ${
+          isPrintPage ? "w-full max-w-none p-0 bg-white" : ""
+        }`}
+      >
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/print/:id" element={<InvoicePrint />} />
           <Route
             path="/overview"
             element={
@@ -46,6 +56,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/companies"
+            element={
+              <ProtectedRoute>
+                <CompanyList />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/invoices"
             element={
@@ -80,6 +100,8 @@ export default function App() {
           />
         </Routes>
       </main>
+      {/* ✅ Toast messages globally */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

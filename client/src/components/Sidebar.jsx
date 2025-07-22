@@ -7,14 +7,20 @@ import {
   HiOutlineClipboardList,
   HiShoppingBag,
   HiCog,
+  HiOfficeBuilding,
 } from "react-icons/hi";
 
 import logo from "../assets/Invoicelogowhite.svg";
-import { getCurrentUserData, getCompany } from "../services/api"; // ✅ API call
+import { getCurrentUserData, getCompanies } from "../services/api"; // ✅ API call
 
 const navItems = [
   { name: "Overview", path: "/overview", icon: <HiHome size={20} /> },
   { name: "Clients", path: "/clients", icon: <HiUser size={20} /> },
+  {
+    name: "Companies",
+    path: "/companies",
+    icon: <HiOfficeBuilding size={20} />,
+  },
   { name: "Invoices", path: "/invoices", icon: <HiDocumentText size={20} /> },
   {
     name: "Orders",
@@ -37,7 +43,7 @@ export default function Sidebar() {
 
       let companyData = null;
       try {
-        companyData = await getCompany();
+        companyData = await getCompanies();
       } catch (error) {
         console.log("No company found yet", error);
       }
@@ -63,7 +69,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100 fixed">
+    <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100 fixed print:hidden">
       <div className="p-4 flex items-center space-x-2">
         <img src={logo} alt="Logo" className="h-8 w-auto" />
       </div>
@@ -96,9 +102,6 @@ export default function Sidebar() {
           <div className="flex flex-col text-left">
             <span className="text-sm font-semibold">
               {user?.name || "Unknown"}
-            </span>
-            <span className="text-xs text-gray-400">
-              {company?.companyName || "No Company"}
             </span>
           </div>
           <svg

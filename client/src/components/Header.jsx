@@ -15,31 +15,31 @@ export default function Header() {
       buttonName: "New invoice",
       buttonIcon: <FaFileInvoice size={18} />,
       buttonColor: "bg-green-400 text-white",
+      path: "/invoices",
     },
     {
       buttonName: "New estimate",
       buttonIcon: <FaCalculator size={18} />,
       buttonColor: "bg-white text-gray-800",
+      path: "/estimate",
     },
     {
       buttonName: "New order",
       buttonIcon: <FaShoppingCart size={18} />,
       buttonColor: "bg-white text-gray-800",
+      path: "/orders",
     },
     {
       buttonName: "New client",
       buttonIcon: <FaUserPlus size={18} />,
       buttonColor: "bg-white text-gray-800",
+      path: "/clients?new=true",
     },
     {
-      buttonName: "Nytt bososs",
+      buttonName: "New company",
       buttonIcon: <FaClipboardList size={18} />,
       buttonColor: "bg-white text-gray-800",
-    },
-    {
-      buttonName: "Ny bodsaa",
-      buttonIcon: <FaBoxOpen size={18} />,
-      buttonColor: "bg-white text-gray-800",
+      path: "/companies",
     },
   ];
 
@@ -55,13 +55,7 @@ export default function Header() {
         {list.map((elem, index) => (
           <Link
             key={index}
-            to={
-              elem.buttonName === "New client"
-                ? "/clients?new=true"
-                : elem.buttonName === "New invoice"
-                ? "/invoices"
-                : `/${elem.buttonName.toLowerCase().replace(/\s+/g, "-")}`
-            }
+            to={elem.path}
             className={`flex items-center gap-2 ${elem.buttonColor} px-4 py-2 rounded-lg shadow hover:shadow-md transition`}
           >
             {elem.buttonIcon}

@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const invoiceItemSchema = new mongoose.Schema(
+  {
+    type: { type: String, enum: ["product", "text"], default: "product" },
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    product: { type: String }, // snapshot
+    text: { type: String },
+    quantity: { type: Number }, // no longer required!
+    unit: { type: String },
+    price: { type: Number }, // no longer required!
+    vatPercent: { type: Number, default: 25 },
+    discountPercent: { type: Number, default: 0 },
+  },
+  { _id: false } // don't need subdocument _id, but optional
+);
+
 const invoiceSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -8,7 +23,6 @@ const invoiceSchema = new mongoose.Schema(
       ref: "Customer",
       required: true,
     },
-
     invoiceNumber: { type: String, required: true, unique: true },
     invoiceDate: { type: Date, required: true },
     paymentTerms: { type: Number, default: 30 },
@@ -19,18 +33,7 @@ const invoiceSchema = new mongoose.Schema(
     language: { type: String, enum: ["en", "sv"], default: "sv" },
     currency: { type: String, default: "SEK" },
 
-    items: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        product: { type: String }, // snapshot
-        text: { type: String },
-        quantity: { type: Number, required: true },
-        unit: { type: String },
-        price: { type: Number, required: true },
-        vatPercent: { type: Number, default: 25 },
-        discountPercent: { type: Number, default: 0 },
-      },
-    ],
+    items: [invoiceItemSchema], // use the new sub-schema
 
     netTotal: { type: Number, required: true },
     vatTotal: { type: Number, required: true },

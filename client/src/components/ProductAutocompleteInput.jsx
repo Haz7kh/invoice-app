@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import debounce from "lodash.debounce";
 
-export default function ProductAutocompleteInput({ onSelect }) {
+export default function ProductAutocompleteInput({
+  onSelect,
+  onAddNewProductClicked,
+}) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -37,7 +40,7 @@ export default function ProductAutocompleteInput({ onSelect }) {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex items-center gap-1">
       <input
         type="text"
         className="p-2 border w-full"
@@ -47,6 +50,37 @@ export default function ProductAutocompleteInput({ onSelect }) {
         onFocus={() => query && setShowDropdown(true)}
         onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
       />
+      <button
+        type="button"
+        disabled={!query}
+        onClick={() => onAddNewProductClicked(query)}
+        className={`border rounded-full p-1 ml-1 ${
+          query
+            ? "text-green-600 border-green-600 hover:bg-green-100"
+            : "text-gray-400 border-gray-200 cursor-not-allowed"
+        }`}
+        title="Add new product"
+        tabIndex={-1}
+      >
+        <svg width={18} height={18} viewBox="0 0 20 20" fill="none">
+          <circle
+            cx="10"
+            cy="10"
+            r="9"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="#fff"
+          />
+          <path
+            d="M10 6v8M6 10h8"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
+
+      {/* Product results dropdown */}
       {showDropdown && results.length > 0 && (
         <ul className="absolute z-10 bg-white border w-full max-h-48 overflow-y-auto shadow">
           {results.map((prod) => (

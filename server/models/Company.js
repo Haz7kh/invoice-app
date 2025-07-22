@@ -32,6 +32,7 @@ const companySchema = new mongoose.Schema(
       city: { type: String },
       country: { type: String, default: "Sweden" },
     },
+    bankgiro: { type: String, required: true },
   },
   {
     timestamps: true,

@@ -57,9 +57,9 @@ export async function getCurrentUserData() {
   }
 }
 
-export async function getCompany() {
+export async function getCompanies() {
   const token = localStorage.getItem("token");
-  if (!token) return null;
+  if (!token) return [];
 
   try {
     const res = await fetch("http://localhost:3000/api/companies", {
@@ -68,15 +68,27 @@ export async function getCompany() {
       },
     });
 
-    if (res.status === 404) return null; // ✅ no company yet, not a real error
-    if (!res.ok) throw new Error("Failed to fetch company");
+    if (!res.ok) throw new Error("Failed to fetch companies");
 
     const data = await res.json();
-    return data;
+    return data; // ✅ this is now an array of companies
   } catch (error) {
     console.error("Company fetch error:", error);
-    return null;
+    return [];
   }
+}
+
+export async function saveCompany(companyData) {
+  return request("/companies", {
+    method: "POST",
+    body: JSON.stringify(companyData),
+  });
+}
+export async function updateCompany(id, updatedData) {
+  return request(`/companies/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedData),
+  });
 }
 
 // invoice create :
@@ -90,6 +102,24 @@ export async function createInvoice(invoiceData) {
 export async function getInvoices() {
   return request("/invoices");
 }
+
+// services/api.js
+
+export const getInvoiceById = async (id) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`http://localhost:3000/api/invoices/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.message || "Failed to fetch invoice");
+  }
+
+  return res.json();
+};
 
 // CREATE product
 export async function createProduct(productData) {

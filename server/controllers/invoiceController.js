@@ -43,6 +43,15 @@ exports.createInvoice = async (req, res) => {
     const processedItems = [];
 
     for (const item of items) {
+      if (item.type === "text") {
+        // Push as-is, skip calculations
+        processedItems.push({
+          type: "text",
+          text: item.text,
+        });
+        continue;
+      }
+
       let {
         productId,
         product,
@@ -76,6 +85,7 @@ exports.createInvoice = async (req, res) => {
       vatTotal += vat;
 
       processedItems.push({
+        type: "product",
         productId,
         product,
         text,
@@ -129,5 +139,26 @@ exports.getInvoices = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch invoices" });
+  }
+};
+
+exports.getInvoiceById = async (req, res) => {
+  try {
+    const userId = req.user.id; // 🔒 ensure the invoice belongs to the logged-in user
+    const invoiceId = req.params.id;
+
+    const invoice = await Invoice.findOne({
+      _id: invoiceId,
+      user: userId,
+    }).populate("customer", "companyName email");
+
+    if (!invoice) {
+      return res.status(404).json({ message: "Invoice not found" });
+    }
+
+    res.json(invoice);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch invoice" });
   }
 };

@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import { getClients } from "../services/api";
 import ProductAutocompleteInput from "./ProductAutocompleteInput";
 
+// Import new components (will create these step-by-step)
+import InvoiceCustomerFields from "./invoice-form/InvoiceCustomerFields";
+import InvoiceItemsTable from "./invoice-form/InvoiceItemsTable";
+import InvoiceTotals from "./invoice-form/InvoiceTotals";
+import InvoiceNotes from "./invoice-form/InvoiceNotes";
+import InvoiceFormButtons from "./invoice-form/InvoiceFormButtons";
+
 export default function InvoiceForm({ onCancel, onSubmit }) {
   const [invoice, setInvoice] = useState({
     customer: "",
@@ -82,6 +89,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       items: [
         ...prev.items,
         {
+          type: "product", // ✅ IMPORTANT: So totals are calculated correctly
           productId: "",
           product: "",
           text: "",
@@ -102,13 +110,58 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       !invoice.invoiceDate ||
       invoice.items.length === 0
     ) {
-      // Optional: alert("Please fill all required fields and add at least one item.");
       return;
     }
 
+    const allItems = invoice.items;
+
+    // Calculate totals, only product rows
+    let net = 0;
+    let vat = 0;
+
+    allItems.forEach((item) => {
+      if (item.type === "text") return;
+
+      const quantity = Number(item.quantity ?? 0);
+      const price = Number(item.price ?? 0);
+      const discount = Number(item.discountPercent ?? 0);
+      const vatPercent = Number(item.vatPercent ?? 0);
+
+      if (
+        isNaN(quantity) ||
+        isNaN(price) ||
+        isNaN(discount) ||
+        isNaN(vatPercent)
+      ) {
+        return; // Skip invalid rows
+      }
+
+      const line = price * quantity;
+      const netLine = line * (1 - discount / 100);
+      net += netLine;
+      vat += netLine * (vatPercent / 100);
+    });
+
+    console.log("🧾 Calculated totals:", {
+      net,
+      vat,
+      netTotal: Number(net.toFixed(2)),
+      vatTotal: Number(vat.toFixed(2)),
+      grandTotal: Number((net + vat).toFixed(2)),
+    });
+
+    console.log("📦 All invoice items:", allItems);
+    const invoiceData = {
+      ...invoice,
+      items: allItems, // include both product and text rows
+      netTotal: Number(net.toFixed(2)),
+      vatTotal: Number(vat.toFixed(2)),
+      grandTotal: Number((net + vat).toFixed(2)),
+    };
+
     setIsSubmitting(true);
     if (typeof onSubmit === "function") {
-      onSubmit(invoice);
+      onSubmit(invoiceData);
     }
     setIsSubmitting(false);
   };
@@ -116,255 +169,39 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
   return (
     <div className="ml-64 p-6 max-w-6xl">
       <h1 className="text-2xl font-bold mb-6">Create Invoice</h1>
-      <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded border">
-        <div>
-          <label className="block font-medium">Client</label>
-          <select
-            name="customer"
-            value={invoice.customer}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          >
-            <option value="">Select Customer…</option>
-            {customers.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.companyName || c.email}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block font-medium">Invoice no.</label>
-          <input
-            name="invoiceNumber"
-            value={invoice.invoiceNumber}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Your reference</label>
-          <input
-            name="yourReference"
-            value={invoice.yourReference}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Invoice date</label>
-          <input
-            type="date"
-            name="invoiceDate"
-            value={invoice.invoiceDate}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Payment terms (days)</label>
-          <input
-            type="number"
-            name="paymentTerms"
-            value={invoice.paymentTerms}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Due date</label>
-          <input
-            type="date"
-            name="dueDate"
-            value={invoice.dueDate}
-            readOnly
-            className="w-full border p-2 rounded bg-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Our reference</label>
-          <input
-            name="ourReference"
-            value={invoice.ourReference}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Language</label>
-          <select
-            name="language"
-            value={invoice.language}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          >
-            <option value="sv">Swedish</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-        <div>
-          <label className="block font-medium">Currency</label>
-          <input
-            name="currency"
-            value={invoice.currency}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-      </div>
+
+      {/* Customer and invoice details */}
+      <InvoiceCustomerFields
+        invoice={invoice}
+        customers={customers}
+        handleChange={handleChange}
+      />
 
       {/* Items Table */}
-      <div className="mt-8">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Product / Service</th>
-              <th className="p-2 border">Text</th>
-              <th className="p-2 border">Qty</th>
-              <th className="p-2 border">Unit</th>
-              <th className="p-2 border">Price</th>
-              <th className="p-2 border">VAT%</th>
-              <th className="p-2 border">Discount</th>
-              <th className="p-2 border">Net</th>
-              <th className="p-2 border">❌</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.items.map((item, i) => {
-              const qty = parseFloat(item.quantity || 0);
-              const price = parseFloat(item.price || 0);
-              const disc = item.discountPercent || 0;
-              const netLine = (price * qty * (1 - disc / 100)).toFixed(2);
+      <InvoiceItemsTable
+        items={invoice.items}
+        setInvoice={setInvoice}
+        invoice={invoice}
+        addNewItem={addNewItem}
+      />
 
-              return (
-                <tr key={i}>
-                  <td className="p-2 border">
-                    <ProductAutocompleteInput
-                      onSelect={(prod) => {
-                        const updated = [...invoice.items];
-                        updated[i] = {
-                          ...updated[i],
-                          productId: prod._id,
-                          product: prod.name,
-                          unit: prod.unit,
-                          price: prod.price,
-                          vatPercent: prod.tax,
-                        };
-                        setInvoice({ ...invoice, items: updated });
-                      }}
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <input
-                      type="text"
-                      value={item.text || ""}
-                      onChange={(e) => {
-                        const u = [...invoice.items];
-                        u[i].text = e.target.value;
-                        setInvoice({ ...invoice, items: u });
-                      }}
-                      className="w-full border p-1"
-                      placeholder="Extra info"
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const u = [...invoice.items];
-                        u[i].quantity = parseFloat(e.target.value) || 0;
-                        setInvoice({ ...invoice, items: u });
-                      }}
-                      className="w-16 border p-1"
-                    />
-                  </td>
-                  <td className="p-2 border">{item.unit}</td>
-                  <td className="p-2 border">{item.price}</td>
-                  <td className="p-2 border">{item.vatPercent}%</td>
-                  <td className="p-2 border">
-                    <input
-                      type="number"
-                      value={item.discountPercent}
-                      onChange={(e) => {
-                        const u = [...invoice.items];
-                        u[i].discountPercent = parseFloat(e.target.value) || 0;
-                        setInvoice({ ...invoice, items: u });
-                      }}
-                      className="w-16 border p-1"
-                    />
-                  </td>
-                  <td className="p-2 border">{netLine}</td>
-                  <td className="p-2 border text-center">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const u = [...invoice.items];
-                        u.splice(i, 1);
-                        setInvoice({ ...invoice, items: u });
-                      }}
-                    >
-                      ❌
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* Totals */}
+      <InvoiceTotals
+        netTotal={netTotal}
+        vatTotal={vatTotal}
+        grandTotal={grandTotal}
+        currency={invoice.currency}
+      />
 
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={addNewItem}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            + New row
-          </button>
-          <div className="text-right space-y-1">
-            <div>
-              <strong>Net:</strong> {netTotal} {invoice.currency}
-            </div>
-            <div>
-              <strong>VAT:</strong> {vatTotal} {invoice.currency}
-            </div>
-            <div>
-              <strong>Total:</strong> {grandTotal} {invoice.currency}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Notes */}
+      <InvoiceNotes notes={invoice.notes} handleChange={handleChange} />
 
-      {/* Notes & Buttons */}
-      <div className="mt-6">
-        <label className="block font-medium mb-1">Notes:</label>
-        <textarea
-          name="notes"
-          rows="3"
-          value={invoice.notes}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
-      </div>
-
-      <div className="mt-6 flex gap-4">
-        <button
-          className={`${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-          } bg-green-600 text-white px-6 py-2 rounded`}
-          disabled={isSubmitting}
-          onClick={handleSubmit}
-        >
-          {isSubmitting ? "Saving..." : "Create Invoice"}
-        </button>
-        <button
-          className="px-6 py-2 border rounded"
-          onClick={() => {
-            if (typeof onCancel === "function") onCancel();
-          }}
-        >
-          Cancel
-        </button>
-      </div>
+      {/* Buttons */}
+      <InvoiceFormButtons
+        isSubmitting={isSubmitting}
+        handleSubmit={handleSubmit}
+        onCancel={onCancel}
+      />
     </div>
   );
 }

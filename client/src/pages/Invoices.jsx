@@ -155,6 +155,7 @@ export default function Invoices() {
                 <th className="p-3">Customer</th>
                 <th className="p-3">Date</th>
                 <th className="p-3">Total</th>
+                <th className="p-3">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -177,6 +178,19 @@ export default function Invoices() {
                           invoice.currency || "SEK"
                         }`
                       : "0.00"}
+                  </td>
+
+                  {/* 👉 Add the print button here */}
+                  <td className="p-3">
+                    <button
+                      title="Print Invoice"
+                      className="text-blue-600 hover:underline"
+                      onClick={() =>
+                        window.open(`/print/${invoice._id}`, "_blank")
+                      }
+                    >
+                      🖨️
+                    </button>
                   </td>
                 </tr>
               ))}
