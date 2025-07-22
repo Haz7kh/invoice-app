@@ -11,7 +11,7 @@ import {
 } from "react-icons/hi";
 
 import logo from "../assets/Invoicelogowhite.svg";
-import { getCurrentUserData, getCompanies } from "../services/api"; // ✅ API call
+import { getCurrentUserData } from "../services/api"; // ✅ API call
 
 const navItems = [
   { name: "Overview", path: "/overview", icon: <HiHome size={20} /> },
@@ -33,7 +33,7 @@ const navItems = [
 
 export default function Sidebar() {
   const [user, setUser] = useState(null);
-  const [company, setCompany] = useState(null);
+
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -41,15 +41,7 @@ export default function Sidebar() {
     const fetchUser = async () => {
       const userData = await getCurrentUserData();
 
-      let companyData = null;
-      try {
-        companyData = await getCompanies();
-      } catch (error) {
-        console.log("No company found yet", error);
-      }
-
       setUser(userData);
-      setCompany(companyData); // null if user has no company
     };
 
     fetchUser();
