@@ -6,6 +6,7 @@ import {
   updateProduct,
 } from "../services/api";
 import ProductForm from "../components/Products/ProductForm";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
 export default function Products() {
   const emptyForm = {
@@ -41,8 +42,7 @@ export default function Products() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?"))
-      return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
       await deleteProduct(id);
       fetchProducts();
@@ -51,7 +51,6 @@ export default function Products() {
     }
   };
 
-  // When submitting, delegate all form logic to ProductForm, only manage list here
   const handleSubmit = async (data) => {
     try {
       if (editId) {
@@ -73,58 +72,72 @@ export default function Products() {
   };
 
   return (
-    <div className="ml-64 p-6 max-w-6xl">
-      <h1 className="text-2xl font-bold mb-6">Products and services</h1>
+    <div className="ml-64 p-6 max-w-7xl bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Products & Services</h1>
 
-      <ProductForm
-        initialData={editId ? editData : emptyForm}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        submitLabel={editId ? "Update Product" : "Add Product"}
-      />
+      {/* Form */}
+      <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 mb-10">
+        <ProductForm
+          initialData={editId ? editData : emptyForm}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          submitLabel={editId ? "Update Product" : "Add Product"}
+        />
+      </div>
 
       {/* Table */}
-      <table className="w-full text-left border-collapse mt-10">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-2 border font-medium">Product / Service</th>
-            <th className="p-2 border font-medium">Product Code</th>
-            <th className="p-2 border font-medium">Price/Rate</th>
-            <th className="p-2 border font-medium">Unit</th>
-            <th className="p-2 border font-medium">VAT %</th>
-            <th className="p-2 border font-medium text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((prod) => (
-            <tr key={prod._id} className="hover:bg-gray-50">
-              <td className="p-2 border text-blue-600 cursor-pointer">
-                {prod.name}
-              </td>
-              <td className="p-2 border">{prod.productCode}</td>
-              <td className="p-2 border">{prod.price.toFixed(2)}</td>
-              <td className="p-2 border">{prod.unit}</td>
-              <td className="p-2 border">{prod.tax}%</td>
-              <td className="p-2 border text-center space-x-2">
-                <button
-                  className="text-blue-600 hover:text-blue-800"
-                  onClick={() => handleEdit(prod)}
-                  title="Edit"
-                >
-                  📝
-                </button>
-                <button
-                  className="text-red-600 hover:text-red-800"
-                  onClick={() => handleDelete(prod._id)}
-                  title="Delete"
-                >
-                  ❌
-                </button>
-              </td>
+      <div className="overflow-x-auto bg-white rounded-2xl shadow-md border border-gray-200">
+        <table className="w-full table-auto text-sm text-gray-700">
+          <thead className="bg-gray-100 text-xs text-gray-600 uppercase tracking-wider">
+            <tr>
+              <th className="px-4 py-3 text-left">Product / Service</th>
+              <th className="px-4 py-3 text-left">Code</th>
+              <th className="px-4 py-3 text-left">Price</th>
+              <th className="px-4 py-3 text-left">Unit</th>
+              <th className="px-4 py-3 text-left">VAT %</th>
+              <th className="px-4 py-3 text-center">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="px-4 py-6 text-center text-gray-400 italic">
+                  No products available.
+                </td>
+              </tr>
+            ) : (
+              products.map((prod) => (
+                <tr
+                  key={prod._id}
+                  className="hover:bg-gray-50 border-t transition-all duration-150"
+                >
+                  <td className="px-4 py-3 font-medium text-blue-600">{prod.name}</td>
+                  <td className="px-4 py-3">{prod.productCode}</td>
+                  <td className="px-4 py-3">{prod.price.toFixed(2)}</td>
+                  <td className="px-4 py-3">{prod.unit}</td>
+                  <td className="px-4 py-3">{prod.tax}%</td>
+                  <td className="px-4 py-3 text-center space-x-2">
+                    <button
+                      className="cursor-pointer text-blue-600 hover:text-blue-800"
+                      onClick={() => handleEdit(prod)}
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      onClick={() => handleDelete(prod._id)}
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
