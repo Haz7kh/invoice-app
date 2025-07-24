@@ -4,6 +4,7 @@ const invoiceItemSchema = new mongoose.Schema(
   {
     type: { type: String, enum: ["product", "text"], default: "product" },
     productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    productCode: { type: String }, // ✅ <-- Add this line
     product: { type: String }, // snapshot
     text: { type: String },
     quantity: { type: Number }, // no longer required!
@@ -12,7 +13,7 @@ const invoiceItemSchema = new mongoose.Schema(
     vatPercent: { type: Number, default: 25 },
     discountPercent: { type: Number, default: 0 },
   },
-  { _id: false } // don't need subdocument _id, but optional
+  { _id: false }
 );
 
 const invoiceSchema = new mongoose.Schema(
@@ -21,6 +22,11 @@ const invoiceSchema = new mongoose.Schema(
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
+      required: true,
+    },
+    companyFrom: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
       required: true,
     },
     invoiceNumber: { type: String, required: true, unique: true },

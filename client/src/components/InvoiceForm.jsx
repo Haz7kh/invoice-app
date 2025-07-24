@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { getClients } from "../services/api";
 import ProductAutocompleteInput from "./ProductAutocompleteInput";
 
-// Import new components (will create these step-by-step)
 import InvoiceCustomerFields from "./invoice-form/InvoiceCustomerFields";
 import InvoiceItemsTable from "./invoice-form/InvoiceItemsTable";
 import InvoiceTotals from "./invoice-form/InvoiceTotals";
@@ -12,6 +12,7 @@ import InvoiceFormButtons from "./invoice-form/InvoiceFormButtons";
 export default function InvoiceForm({ onCancel, onSubmit }) {
   const [invoice, setInvoice] = useState({
     customer: "",
+    companyFrom: "", // ✅ new field
     invoiceNumber: "",
     invoiceDate: "",
     dueDate: "",
@@ -26,7 +27,9 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const [companies, setCompanies] = useState([]);
 
+  // 🔄 Load customers
   useEffect(() => {
     (async () => {
       try {
@@ -38,6 +41,38 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     })();
   }, []);
 
+  // 🔄 Load companies (with auth)
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.warn("No token found in localStorage");
+          return;
+        }
+
+        const res = await fetch("http://localhost:3000/api/companies", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const raw = await res.text();
+
+        const data = JSON.parse(raw); // convert manually to catch invalid JSON
+        setCompanies(data);
+      } catch (err) {
+        console.error("❌ Failed to load companies:", err.message);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  // 🔁 Auto-calculate due date
   useEffect(() => {
     if (!invoice.invoiceDate || !invoice.paymentTerms) return;
     const date = new Date(invoice.invoiceDate);
@@ -48,6 +83,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   }, [invoice.invoiceDate, invoice.paymentTerms]);
 
+  // 🧠 Handle all input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
@@ -63,6 +99,28 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   };
 
+  // ➕ Add item row
+  const addNewItem = () => {
+    setInvoice((prev) => ({
+      ...prev,
+      items: [
+        ...prev.items,
+        {
+          type: "product",
+          productId: "",
+          product: "",
+          text: "",
+          quantity: 1,
+          unit: "",
+          price: 0,
+          vatPercent: 25,
+          discountPercent: 0,
+        },
+      ],
+    }));
+  };
+
+  // ➕ Calculate totals
   const calculateTotals = () => {
     let net = 0,
       vat = 0;
@@ -83,26 +141,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
 
   const { netTotal, vatTotal, grandTotal } = calculateTotals();
 
-  const addNewItem = () => {
-    setInvoice((prev) => ({
-      ...prev,
-      items: [
-        ...prev.items,
-        {
-          type: "product", // ✅ IMPORTANT: So totals are calculated correctly
-          productId: "",
-          product: "",
-          text: "",
-          quantity: 1,
-          unit: "",
-          price: 0,
-          vatPercent: 25,
-          discountPercent: 0,
-        },
-      ],
-    }));
-  };
-
+  // 📨 Handle Submit
   const handleSubmit = async () => {
     if (
       !invoice.customer ||
@@ -113,11 +152,10 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       return;
     }
 
-    const allItems = invoice.items;
-
-    // Calculate totals, only product rows
     let net = 0;
     let vat = 0;
+
+    const allItems = invoice.items;
 
     allItems.forEach((item) => {
       if (item.type === "text") return;
@@ -133,7 +171,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
         isNaN(discount) ||
         isNaN(vatPercent)
       ) {
-        return; // Skip invalid rows
+        return;
       }
 
       const line = price * quantity;
@@ -142,18 +180,9 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       vat += netLine * (vatPercent / 100);
     });
 
-    console.log("🧾 Calculated totals:", {
-      net,
-      vat,
-      netTotal: Number(net.toFixed(2)),
-      vatTotal: Number(vat.toFixed(2)),
-      grandTotal: Number((net + vat).toFixed(2)),
-    });
-
-    console.log("📦 All invoice items:", allItems);
     const invoiceData = {
       ...invoice,
-      items: allItems, // include both product and text rows
+      items: allItems,
       netTotal: Number(net.toFixed(2)),
       vatTotal: Number(vat.toFixed(2)),
       grandTotal: Number((net + vat).toFixed(2)),
@@ -166,18 +195,18 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     setIsSubmitting(false);
   };
 
+  // ✅ Render
   return (
     <div className="ml-64 p-6 max-w-6xl">
       <h1 className="text-2xl font-bold mb-6">Create Invoice</h1>
 
-      {/* Customer and invoice details */}
       <InvoiceCustomerFields
         invoice={invoice}
         customers={customers}
         handleChange={handleChange}
+        companies={companies}
       />
 
-      {/* Items Table */}
       <InvoiceItemsTable
         items={invoice.items}
         setInvoice={setInvoice}
@@ -185,7 +214,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
         addNewItem={addNewItem}
       />
 
-      {/* Totals */}
       <InvoiceTotals
         netTotal={netTotal}
         vatTotal={vatTotal}
@@ -193,10 +221,8 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
         currency={invoice.currency}
       />
 
-      {/* Notes */}
       <InvoiceNotes notes={invoice.notes} handleChange={handleChange} />
 
-      {/* Buttons */}
       <InvoiceFormButtons
         isSubmitting={isSubmitting}
         handleSubmit={handleSubmit}

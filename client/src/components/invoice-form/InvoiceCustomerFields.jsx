@@ -4,9 +4,27 @@ export default function InvoiceCustomerFields({
   invoice,
   customers,
   handleChange,
+  companies,
 }) {
   return (
     <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded border mb-8">
+      <div>
+        <label className="block font-medium">Invoice From (Company)</label>
+        <select
+          name="companyFrom"
+          value={invoice.companyFrom}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="">Select Company…</option>
+          {companies.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.companyName || c.email}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div>
         <label className="block font-medium">Client</label>
         <select

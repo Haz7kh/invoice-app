@@ -5,6 +5,7 @@ exports.createInvoice = async (req, res) => {
   try {
     const {
       customer,
+      companyFrom,
       invoiceNumber,
       invoiceDate,
       paymentTerms,
@@ -30,7 +31,6 @@ exports.createInvoice = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ Duplicate check before proceeding
     const existing = await Invoice.findOne({ user, invoiceNumber });
     if (existing) {
       return res.status(400).json({
@@ -44,24 +44,21 @@ exports.createInvoice = async (req, res) => {
 
     for (const item of items) {
       if (item.type === "text") {
-        // Push as-is, skip calculations
         processedItems.push({
           type: "text",
           text: item.text,
+          vatPercent: item.vatPercent || 25,
+          discountPercent: item.discountPercent || 0,
         });
         continue;
       }
 
-      let {
-        productId,
-        product,
-        text,
-        quantity,
-        unit,
-        price,
-        vatPercent = 25,
-        discountPercent = 0,
-      } = item;
+      let { productId, quantity, discountPercent = 0, vatPercent, text } = item;
+
+      let product = item.product;
+      let price = item.price;
+      let unit = item.unit;
+      let productCode = "-";
 
       if (productId) {
         const prod = await Product.findById(productId);
@@ -75,6 +72,7 @@ exports.createInvoice = async (req, res) => {
         unit = prod.unit;
         price = prod.price;
         vatPercent = prod.tax;
+        productCode = prod.productCode || "-";
       }
 
       const discount = price * quantity * (discountPercent / 100);
@@ -87,6 +85,7 @@ exports.createInvoice = async (req, res) => {
       processedItems.push({
         type: "product",
         productId,
+        productCode, // ✅ now correctly included
         product,
         text,
         quantity,
@@ -101,6 +100,7 @@ exports.createInvoice = async (req, res) => {
 
     const invoice = new Invoice({
       user,
+      companyFrom,
       customer,
       invoiceNumber,
       invoiceDate,
@@ -118,7 +118,13 @@ exports.createInvoice = async (req, res) => {
     });
 
     const saved = await invoice.save();
-    const populated = await saved.populate("customer", "companyName email"); // ✅ populate the customer
+    const populated = await Invoice.findById(saved._id)
+      .populate("customer", "companyName email")
+      .populate(
+        "companyFrom",
+        "companyName address zip city orgNumber email phone"
+      );
+
     return res.status(201).json(populated);
   } catch (err) {
     console.error("💥 Error in createInvoice:", err);
@@ -144,13 +150,15 @@ exports.getInvoices = async (req, res) => {
 
 exports.getInvoiceById = async (req, res) => {
   try {
-    const userId = req.user.id; // 🔒 ensure the invoice belongs to the logged-in user
+    const userId = req.user.id;
     const invoiceId = req.params.id;
 
     const invoice = await Invoice.findOne({
       _id: invoiceId,
       user: userId,
-    }).populate("customer", "companyName email");
+    })
+      .populate("customer")
+      .populate("companyFrom");
 
     if (!invoice) {
       return res.status(404).json({ message: "Invoice not found" });
