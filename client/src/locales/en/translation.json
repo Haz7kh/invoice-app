@@ -1,0 +1,118 @@
+{
+  "sidebar": {
+    "overview": "Overview",
+    "clients": "Clients",
+    "companies": "Companies",
+    "invoices": "Invoices",
+    "orders": "Orders",
+    "products": "Products",
+    "settings": "Settings",
+    "logout": "Logout",
+    "unknown": "Unknown"
+  },
+
+  "overview": {
+    "welcome_title": "Welcome to <1>EasyInvoice</1>",
+    "welcome_description": "Manage your business effortlessly with our smart invoicing system, built for modern companies.",
+    "feature_1_title": "Easy Invoicing",
+    "feature_1_desc": "Create, send, and track invoices in seconds with a user-friendly interface.",
+    "feature_2_title": "Complete Client & Company Management",
+    "feature_2_desc": "Centralize all your customers and businesses with one integrated solution.",
+    "feature_3_title": "Powerful Settings & Customization",
+    "feature_3_desc": "Choose templates, configure taxes, and personalize your invoices with ease."
+  },
+  "products": {
+    "page_title": "Products & Services",
+    "add": "Add Product",
+    "update": "Update Product",
+    "table": {
+      "name": "Product / Service",
+      "code": "Code",
+      "price": "Price",
+      "unit": "Unit",
+      "tax": "VAT %",
+      "actions": "Actions",
+      "no_products": "No products available."
+    },
+    "confirm_delete": "Are you sure you want to delete this product?"
+  },
+  "orders": {
+    "title": "Orders"
+  },
+  "clients": {
+    "title": "Clients",
+    "new": "New client",
+    "print": "Print list of clients",
+    "search": "Search...",
+    "no_clients": "No clients found.",
+    "table": {
+      "id": "#",
+      "name": "NAME",
+      "city": "CITY",
+      "updated": "UPDATED ⬆️",
+      "email": "EMAIL",
+      "actions": "ACTIONS"
+    },
+    "form": {
+      "general": "General",
+      "company": "Company",
+      "person": "Person",
+      "company_name": "Company Name",
+      "org_number": "Company Reg. No.",
+      "vat_number": "VAT No.",
+      "email": "Email",
+      "send_by": "Send invoice by",
+      "attach_pdf": "Always attach a PDF copy in emails",
+      "billing_address": "Billing Address",
+      "delivery_address": "Delivery Address",
+      "co": "C/O",
+      "address": "Address",
+      "zip": "Zip Code",
+      "city": "City",
+      "country": "Country",
+      "country_options": {
+        "sweden": "Sweden",
+        "norway": "Norway",
+        "denmark": "Denmark"
+      },
+      "show_settings": "Show detailed settings",
+      "create": "Create Client",
+      "cancel": "Cancel"
+    },
+    "time": {
+      "today": "today",
+      "one_day": "one day",
+      "days_ago": "{{count}} days ago"
+    }
+  },
+  "invoice": {
+    "print_button": "Print as PDF",
+    "title": "Invoice",
+    "number": "Invoice number",
+    "date": "Invoice date",
+    "delivery_date": "Delivery date",
+    "due_date": "Due date",
+    "your_ref": "Your reference",
+    "our_ref": "Our reference",
+    "late_fee": "Interest will be charged according to the Swedish Interest Act for overdue payments.",
+    "items": {
+      "code": "Item No.",
+      "desc": "Description",
+      "qty": "Quantity",
+      "unit": "Unit",
+      "price": "Price",
+      "total": "Total"
+    },
+    "totals": {
+      "subtotal": "Excl. VAT",
+      "vat": "VAT",
+      "grand": "Total to pay"
+    },
+    "footer": {
+      "address": "Address",
+      "email": "Email",
+      "org_number": "Org. number",
+      "f_tax": "Approved for F-tax"
+    }
+  }
+}

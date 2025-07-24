@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getClients, createClient } from "../services/api";
 import { FaUserPlus, FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 export default function Clients() {
+  const { t } = useTranslation();
+
   const [clients, setClients] = useState([]);
   const [newClient, setNewClient] = useState(false);
   const [error, setError] = useState(null);
@@ -28,9 +31,9 @@ export default function Clients() {
     const date = new Date(dateStr);
     const now = new Date();
     const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-    if (diff === 0) return "today";
-    if (diff === 1) return "one day";
-    return `${diff} days ago`;
+    if (diff === 0) return t("clients.time.today");
+    if (diff === 1) return t("clients.time.one_day");
+    return t("clients.time.days_ago", { count: diff });
   };
 
   useEffect(() => {
@@ -103,7 +106,9 @@ export default function Clients() {
     <div className="ml-64">
       <div>
         <div className="py-4 px-6 bg-gray-200 shadow-sm">
-          <h2 className="text-gray-700 text-3xl font-bold">Clients</h2>
+          <h2 className="text-gray-700 text-3xl font-bold">
+            {t("clients.title")}
+          </h2>
         </div>
         <div className="flex flex-wrap gap-4 justify-around my-6 px-4">
           <div className="flex">
@@ -112,17 +117,19 @@ export default function Clients() {
               className="cursor-pointer flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg shadow hover:shadow-md transition"
             >
               <FaUserPlus className="text-white" size={18} />
-              <h3 className="text-white text-sm font-medium">New client</h3>
+              <h3 className="text-white text-sm font-medium">
+                {t("clients.new")}
+              </h3>
             </button>
             <button className="cursor-pointer mx-5 flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition">
-              <h3>print list of clients</h3>
+              <h3>{t("clients.print")}</h3>
             </button>
           </div>
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t("clients.search")}
               className="pl-10 pr-4 py-2 rounded-full bg-white shadow border outline-none w-64 max-w-full"
             />
           </div>
@@ -138,12 +145,24 @@ export default function Clients() {
             <table className="min-w-full bg-white border border-gray-200 rounded shadow">
               <thead className="bg-gray-100 text-gray-700 text-sm">
                 <tr>
-                  <th className="py-2 px-4 text-left">#</th>
-                  <th className="py-2 px-4 text-left">NAME</th>
-                  <th className="py-2 px-4 text-left">CITY</th>
-                  <th className="py-2 px-4 text-left">UPDATED ⬆️</th>
-                  <th className="py-2 px-4 text-left">EMAIL</th>
-                  <th className="py-2 px-4 text-left">ACTIONS</th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.id")}
+                  </th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.name")}
+                  </th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.city")}
+                  </th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.updated")}
+                  </th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.email")}
+                  </th>
+                  <th className="py-2 px-4 text-left">
+                    {t("clients.table.actions")}
+                  </th>
                 </tr>
               </thead>
               <tbody>

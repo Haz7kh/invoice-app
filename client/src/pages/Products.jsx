@@ -7,8 +7,11 @@ import {
 } from "../services/api";
 import ProductForm from "../components/Products/ProductForm";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 export default function Products() {
+  const { t } = useTranslation();
+
   const emptyForm = {
     name: "",
     unit: "",
@@ -42,7 +45,7 @@ export default function Products() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm(t("products.confirm_delete"))) return;
     try {
       await deleteProduct(id);
       fetchProducts();
@@ -73,7 +76,9 @@ export default function Products() {
 
   return (
     <div className="ml-64 p-6 max-w-7xl bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Products & Services</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        {t("products.page_title")}
+      </h1>
 
       {/* Form */}
       <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 mb-10">
@@ -81,7 +86,7 @@ export default function Products() {
           initialData={editId ? editData : emptyForm}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
-          submitLabel={editId ? "Update Product" : "Add Product"}
+          submitLabel={editId ? t("products.update") : t("products.add")}
         />
       </div>
 
@@ -90,19 +95,32 @@ export default function Products() {
         <table className="w-full table-auto text-sm text-gray-700">
           <thead className="bg-gray-100 text-xs text-gray-600 uppercase tracking-wider">
             <tr>
-              <th className="px-4 py-3 text-left">Product / Service</th>
-              <th className="px-4 py-3 text-left">Code</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Unit</th>
-              <th className="px-4 py-3 text-left">VAT %</th>
-              <th className="px-4 py-3 text-center">Actions</th>
+              <th className="px-4 py-3 text-left">
+                {t("products.table.name")}
+              </th>
+              <th className="px-4 py-3 text-left">
+                {t("products.table.code")}
+              </th>
+              <th className="px-4 py-3 text-left">
+                {t("products.table.price")}
+              </th>
+              <th className="px-4 py-3 text-left">
+                {t("products.table.unit")}
+              </th>
+              <th className="px-4 py-3 text-left">{t("products.table.tax")}</th>
+              <th className="px-4 py-3 text-center">
+                {t("products.table.actions")}
+              </th>
             </tr>
           </thead>
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-4 py-6 text-center text-gray-400 italic">
-                  No products available.
+                <td
+                  colSpan="6"
+                  className="px-4 py-6 text-center text-gray-400 italic"
+                >
+                  {t("products.table.no_products")}
                 </td>
               </tr>
             ) : (
@@ -111,7 +129,9 @@ export default function Products() {
                   key={prod._id}
                   className="hover:bg-gray-50 border-t transition-all duration-150"
                 >
-                  <td className="px-4 py-3 font-medium text-blue-600">{prod.name}</td>
+                  <td className="px-4 py-3 font-medium text-blue-600">
+                    {prod.name}
+                  </td>
                   <td className="px-4 py-3">{prod.productCode}</td>
                   <td className="px-4 py-3">{prod.price.toFixed(2)}</td>
                   <td className="px-4 py-3">{prod.unit}</td>

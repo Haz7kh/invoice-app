@@ -1,0 +1,117 @@
+{
+  "sidebar": {
+    "overview": "Översikt",
+    "clients": "Kunder",
+    "companies": "Företag",
+    "invoices": "Fakturor",
+    "orders": "Beställningar",
+    "products": "Produkter",
+    "settings": "Inställningar",
+    "logout": "Logga ut",
+    "unknown": "Okänd"
+  },
+  "overview": {
+    "welcome_title": "Välkommen till <1>EasyInvoice</1>",
+    "welcome_description": "Hantera ditt företag enkelt med vårt smarta faktureringssystem, byggt för moderna företag.",
+    "feature_1_title": "Enkel fakturering",
+    "feature_1_desc": "Skapa, skicka och spåra fakturor på några sekunder med ett användarvänligt gränssnitt.",
+    "feature_2_title": "Fullständig kund- & företags­hantering",
+    "feature_2_desc": "Samla alla dina kunder och företag i en integrerad lösning.",
+    "feature_3_title": "Kraftfulla inställningar & anpassningar",
+    "feature_3_desc": "Välj mallar, konfigurera moms och anpassa dina fakturor enkelt."
+  },
+  "products": {
+    "page_title": "Produkter och tjänster",
+    "add": "Lägg till produkt",
+    "update": "Uppdatera produkt",
+    "table": {
+      "name": "Produkt / Tjänst",
+      "code": "Kod",
+      "price": "Pris",
+      "unit": "Enhet",
+      "tax": "Moms %",
+      "actions": "Åtgärder",
+      "no_products": "Inga produkter tillgängliga."
+    },
+    "confirm_delete": "Är du säker på att du vill ta bort denna produkt?"
+  },
+  "orders": {
+    "title": "Beställningar"
+  },
+  "clients": {
+    "title": "Kunder",
+    "new": "Ny kund",
+    "print": "Skriv ut kundlista",
+    "search": "Sök...",
+    "no_clients": "Inga kunder hittades.",
+    "table": {
+      "id": "#",
+      "name": "NAMN",
+      "city": "STAD",
+      "updated": "UPPDATERAD ⬆️",
+      "email": "E-POST",
+      "actions": "ÅTGÄRDER"
+    },
+    "form": {
+      "general": "Allmänt",
+      "company": "Företag",
+      "person": "Person",
+      "company_name": "Företagsnamn",
+      "org_number": "Organisationsnummer",
+      "vat_number": "Momsregistreringsnummer",
+      "email": "E-post",
+      "send_by": "Skicka faktura via",
+      "attach_pdf": "Bifoga alltid en PDF-kopia i e-post",
+      "billing_address": "Faktureringsadress",
+      "delivery_address": "Leveransadress",
+      "co": "C/O",
+      "address": "Adress",
+      "zip": "Postnummer",
+      "city": "Stad",
+      "country": "Land",
+      "country_options": {
+        "sweden": "Sverige",
+        "norway": "Norge",
+        "denmark": "Danmark"
+      },
+      "show_settings": "Visa detaljerade inställningar",
+      "create": "Skapa kund",
+      "cancel": "Avbryt"
+    },
+    "time": {
+      "today": "idag",
+      "one_day": "en dag",
+      "days_ago": "{{count}} dagar sedan"
+    }
+  },
+  "invoice": {
+    "print_button": "Skriv ut som PDF",
+    "title": "Faktura",
+    "number": "Fakturanummer",
+    "date": "Fakturadatum",
+    "delivery_date": "Leveransdatum",
+    "due_date": "Förfallodatum",
+    "your_ref": "Er referens",
+    "our_ref": "Vår referens",
+    "late_fee": "Vid betalning efter förfallodagen debiteras ränta enligt räntelagen.",
+    "items": {
+      "code": "Art.nr",
+      "desc": "Beskrivning",
+      "qty": "Antal",
+      "unit": "Enhet",
+      "price": "À-pris",
+      "total": "Summa"
+    },
+    "totals": {
+      "subtotal": "Exkl. moms",
+      "vat": "Moms",
+      "grand": "Att betala"
+    },
+    "footer": {
+      "address": "Adress",
+      "email": "E-post",
+      "org_number": "Organisationsnr",
+      "f_tax": "Godkänd för F-skatt"
+    }
+  }
+}

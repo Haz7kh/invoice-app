@@ -11,41 +11,62 @@ import {
 } from "react-icons/hi";
 
 import logo from "../assets/Invoicelogowhite.svg";
-import { getCurrentUserData } from "../services/api"; // ✅ API call
-
-const navItems = [
-  { name: "Overview", path: "/overview", icon: <HiHome size={20} /> },
-  { name: "Clients", path: "/clients", icon: <HiUser size={20} /> },
-  {
-    name: "Companies",
-    path: "/companies",
-    icon: <HiOfficeBuilding size={20} />,
-  },
-  { name: "Invoices", path: "/invoices", icon: <HiDocumentText size={20} /> },
-  {
-    name: "Orders",
-    path: "/orders",
-    icon: <HiOutlineClipboardList size={20} />,
-  },
-  { name: "Products", path: "/products", icon: <HiShoppingBag size={20} /> },
-  { name: "Settings", path: "/settings", icon: <HiCog size={20} /> },
-];
+import { getCurrentUserData } from "../services/api";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next"; // ✅ Import i18n hook
 
 export default function Sidebar() {
+  const { t } = useTranslation(); // ✅ Hook
   const [user, setUser] = useState(null);
-
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       const userData = await getCurrentUserData();
-
       setUser(userData);
     };
 
     fetchUser();
   }, []);
+
+  const navItems = [
+    {
+      name: t("sidebar.overview"),
+      path: "/overview",
+      icon: <HiHome size={20} />,
+    },
+    {
+      name: t("sidebar.clients"),
+      path: "/clients",
+      icon: <HiUser size={20} />,
+    },
+    {
+      name: t("sidebar.companies"),
+      path: "/companies",
+      icon: <HiOfficeBuilding size={20} />,
+    },
+    {
+      name: t("sidebar.invoices"),
+      path: "/invoices",
+      icon: <HiDocumentText size={20} />,
+    },
+    {
+      name: t("sidebar.orders"),
+      path: "/orders",
+      icon: <HiOutlineClipboardList size={20} />,
+    },
+    {
+      name: t("sidebar.products"),
+      path: "/products",
+      icon: <HiShoppingBag size={20} />,
+    },
+    {
+      name: t("sidebar.settings"),
+      path: "/settings",
+      icon: <HiCog size={20} />,
+    },
+  ];
 
   const initials = user?.name
     ? user.name
@@ -83,7 +104,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-gray-700 space-y-3">
         <button
           className="flex items-center space-x-3 w-full"
           onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -93,7 +114,7 @@ export default function Sidebar() {
           </div>
           <div className="flex flex-col text-left">
             <span className="text-sm font-semibold">
-              {user?.name || "Unknown"}
+              {user?.name || t("sidebar.unknown")}
             </span>
           </div>
           <svg
@@ -115,15 +136,17 @@ export default function Sidebar() {
         </button>
 
         {userDropdownOpen && (
-          <div className="mt-2 text-sm">
+          <div className="text-sm space-y-1">
             <button
               onClick={handleLogout}
               className="block w-full text-left px-2 py-1 hover:bg-gray-700 rounded"
             >
-              Logout
+              {t("sidebar.logout")}
             </button>
           </div>
         )}
+
+        <LanguageSwitcher />
       </div>
     </div>
   );
