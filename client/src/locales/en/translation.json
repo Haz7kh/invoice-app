@@ -44,38 +44,39 @@
     "new": "New client",
     "print": "Print list of clients",
     "search": "Search...",
-    "no_clients": "No clients found.",
+    "empty": "No clients found.",
     "table": {
       "id": "#",
-      "name": "NAME",
-      "city": "CITY",
-      "updated": "UPDATED ⬆️",
-      "email": "EMAIL",
-      "actions": "ACTIONS"
+      "name": "Name",
+      "city": "City",
+      "updated": "Updated ⬆️",
+      "email": "Email",
+      "actions": "Actions"
     },
     "form": {
       "general": "General",
       "company": "Company",
       "person": "Person",
       "company_name": "Company Name",
-      "org_number": "Company Reg. No.",
-      "vat_number": "VAT No.",
+      "reg_no": "Company Reg. No.",
+      "vat_no": "VAT No.",
       "email": "Email",
       "send_by": "Send invoice by",
+      "send_options": {
+        "email": "Email",
+        "email_sms": "E-post + SMS",
+        "letter": "Letter",
+        "e_invoice": "E-invoice"
+      },
       "attach_pdf": "Always attach a PDF copy in emails",
-      "billing_address": "Billing Address",
-      "delivery_address": "Delivery Address",
+      "billing": "Billing Address",
+      "delivery": "Delivery Address",
       "co": "C/O",
       "address": "Address",
       "zip": "Zip Code",
       "city": "City",
       "country": "Country",
-      "country_options": {
-        "sweden": "Sweden",
-        "norway": "Norway",
-        "denmark": "Denmark"
-      },
-      "show_settings": "Show detailed settings",
+      "details": "Show detailed settings",
       "create": "Create Client",
       "cancel": "Cancel"
     },
@@ -113,6 +114,213 @@
       "email": "Email",
       "org_number": "Org. number",
       "f_tax": "Approved for F-tax"
+    }
+  },
+  "invoices": {
+    "title": "Invoices",
+    "new_invoice": "New Invoice",
+    "report_export": "Report / Export",
+    "search": "Search",
+    "no_results": "No invoices found for the selected date range.",
+    "customer": "Customer",
+    "date": "Date",
+    "total": "Total",
+    "action": "Action",
+    "unknown": "Unknown",
+    "no_date": "No Date",
+    "print_invoice": "Print Invoice",
+    "error_saving": "Error saving invoice"
+  },
+
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "button": "Login",
+    "no_account": "Don’t have an account?",
+    "register": "Register here",
+    "placeholder_email": "you@example.com",
+    "placeholder_password": "••••••••"
+  },
+  "register": {
+    "title": "Create Account",
+    "name_placeholder": "Full Name",
+    "email_placeholder": "Email",
+    "password_placeholder": "Password",
+    "phone_placeholder": "Phone (optional)",
+    "language_label": "Language",
+    "button": "Register",
+    "have_account": "Already have an account?",
+    "login": "Login"
+  },
+  "settings": {
+    "title": "Settings",
+    "save_template": "Save Template",
+    "tabs": {
+      "default": "Default settings content here",
+      "accounting": "Accounting settings here",
+      "storage": "Data storage section here",
+      "custom": "Custom extra fields here"
+    }
+  },
+  "settingsTabs": {
+    "company": "Company",
+    "invoice": "Invoice appearance",
+    "default": "Default settings",
+    "accounting": "Accounting",
+    "storage": "Data storage",
+    "custom": "Custom extra fields"
+  },
+  "header": {
+    "overview": "Overview",
+    "buttons": {
+      "new_invoice": "New invoice",
+      "new_estimate": "New estimate",
+      "new_order": "New order",
+      "new_client": "New client",
+      "new_company": "New company"
+    }
+  },
+  "invoiceForm": {
+    "title": "Create Invoice"
+  },
+  "invoiceCustomerFields": {
+    "invoice_from": "Invoice From (Company)",
+    "select_company": "Select Company…",
+    "client": "Client",
+    "select_customer": "Select Customer…",
+    "invoice_no": "Invoice no.",
+    "your_reference": "Your reference",
+    "invoice_date": "Invoice date",
+    "payment_terms": "Payment terms (days)",
+    "due_date": "Due date",
+    "our_reference": "Our reference",
+    "language": "Language",
+    "currency": "Currency"
+  },
+  "invoiceFormButtons": {
+    "saving": "Saving...",
+    "create": "Create Invoice",
+    "cancel": "Cancel"
+  },
+  "invoiceItemsTable": {
+    "headers": {
+      "product": "Product / Service",
+      "text": "Text",
+      "qty": "Qty",
+      "unit": "Unit",
+      "price": "Price",
+      "vat": "VAT%",
+      "discount": "Discount",
+      "net": "Net",
+      "remove": "❌"
+    },
+    "placeholders": {
+      "text_row": "Add a description or note (optional)",
+      "extra_info": "Extra info"
+    },
+    "buttons": {
+      "add_product": "+ New Product row",
+      "add_text": "+ New text row"
+    }
+  },
+  "invoiceNotes": {
+    "label": "Notes:"
+  },
+  "invoiceTotals": {
+    "net": "Net:",
+    "vat": "VAT:",
+    "total": "Total:"
+  },
+  "addProductModal": {
+    "title": "Add New Product",
+    "create": "Create Product",
+    "error": "Failed to create product",
+    "close": "Close"
+  },
+  "productForm": {
+    "placeholders": {
+      "name": "Name",
+      "unit": "Unit",
+      "product_code": "Product Code",
+      "price": "Price",
+      "tax": "Tax %"
+    },
+    "labels": {
+      "green_tech": "ROT / RUT / Green Tech"
+    },
+    "buttons": {
+      "cancel": "Cancel"
+    }
+  },
+  "invoiceAppearance": {
+    "title": "Invoice Template",
+    "templates": {
+      "urban": "Urban",
+      "clean": "Clean",
+      "iconic": "Iconic",
+      "foxy": "Foxy",
+      "klaralven": "Klarälven",
+      "original": "Original",
+      "croatia": "Croatia"
+    }
+  },
+  "languageSwitcher": {
+    "english": "English",
+    "swedish": "Swedish"
+  },
+  "company_form": {
+    "company_name": "Company Name",
+    "org_number": "Org Number",
+    "vat_number": "VAT Number",
+    "email": "Email",
+    "bankgiro": "Bankgiro",
+    "send_by": "Send Invoice By",
+    "send_options": {
+      "email": "Email",
+      "email_sms": "E-mail + SMS",
+      "letter": "Letter",
+      "e_invoice": "E-invoice"
+    },
+    "attach_pdf": "Always attach a PDF copy",
+    "billing": "Billing Address",
+    "co": "C/O",
+    "address": "Address",
+    "city": "City",
+    "zip_code": "Zip Code",
+    "country": "Country",
+    "create_button": "Create Company",
+    "update_button": "Update Company",
+    "cancel_button": "Cancel",
+    "created": "Company created successfully!",
+    "updated": "Company updated successfully!",
+    "error": "Something went wrong."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "loading": "Loading...",
+  "companies": {
+    "title": "Your Companies",
+    "add_button": "+ Add Company",
+    "empty": "No companies found.",
+    "confirm_delete": "Are you sure you want to delete this company?",
+    "labels": {
+      "org_number": "Org Number",
+      "vat": "VAT",
+      "email": "Email",
+      "bankgiro": "Bankgiro",
+      "city": "City"
+    },
+    "toast": {
+      "saved": "Company saved successfully!",
+      "deleted": "Company deleted successfully!"
+    },
+    "errors": {
+      "fetch_failed": "Failed to fetch companies",
+      "delete_failed": "Failed to delete company."
     }
   }
 }

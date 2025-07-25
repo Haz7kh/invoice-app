@@ -43,38 +43,39 @@
     "new": "Ny kund",
     "print": "Skriv ut kundlista",
     "search": "Sök...",
-    "no_clients": "Inga kunder hittades.",
+    "empty": "Inga kunder hittades.",
     "table": {
       "id": "#",
-      "name": "NAMN",
-      "city": "STAD",
-      "updated": "UPPDATERAD ⬆️",
-      "email": "E-POST",
-      "actions": "ÅTGÄRDER"
+      "name": "Namn",
+      "city": "Stad",
+      "updated": "Uppdaterad ⬆️",
+      "email": "E-post",
+      "actions": "Åtgärder"
     },
     "form": {
       "general": "Allmänt",
       "company": "Företag",
       "person": "Person",
       "company_name": "Företagsnamn",
-      "org_number": "Organisationsnummer",
-      "vat_number": "Momsregistreringsnummer",
+      "reg_no": "Organisationsnummer",
+      "vat_no": "Momsnummer",
       "email": "E-post",
       "send_by": "Skicka faktura via",
+      "send_options": {
+        "email": "E-post",
+        "email_sms": "E-post + SMS",
+        "letter": "Brev",
+        "e_invoice": "E-faktura"
+      },
       "attach_pdf": "Bifoga alltid en PDF-kopia i e-post",
-      "billing_address": "Faktureringsadress",
-      "delivery_address": "Leveransadress",
+      "billing": "Fakturaadress",
+      "delivery": "Leveransadress",
       "co": "C/O",
       "address": "Adress",
       "zip": "Postnummer",
       "city": "Stad",
       "country": "Land",
-      "country_options": {
-        "sweden": "Sverige",
-        "norway": "Norge",
-        "denmark": "Danmark"
-      },
-      "show_settings": "Visa detaljerade inställningar",
+      "details": "Visa detaljerade inställningar",
       "create": "Skapa kund",
       "cancel": "Avbryt"
     },
@@ -112,6 +113,213 @@
       "email": "E-post",
       "org_number": "Organisationsnr",
       "f_tax": "Godkänd för F-skatt"
+    }
+  },
+  "invoices": {
+    "title": "Fakturor",
+    "new_invoice": "Ny faktura",
+    "report_export": "Rapport / Export",
+    "search": "Sök",
+    "no_results": "Inga fakturor hittades för det valda datumintervallet.",
+    "customer": "Kund",
+    "date": "Datum",
+    "total": "Totalt",
+    "action": "Åtgärd",
+    "unknown": "Okänd",
+    "no_date": "Inget datum",
+    "print_invoice": "Skriv ut faktura",
+    "error_saving": "Fel vid sparande av faktura"
+  },
+
+  "login": {
+    "title": "Logga in",
+    "email": "E-post",
+    "password": "Lösenord",
+    "button": "Logga in",
+    "no_account": "Har du inget konto?",
+    "register": "Registrera dig här",
+    "placeholder_email": "du@example.com",
+    "placeholder_password": "••••••••"
+  },
+  "register": {
+    "title": "Skapa konto",
+    "name_placeholder": "Fullständigt namn",
+    "email_placeholder": "E-post",
+    "password_placeholder": "Lösenord",
+    "phone_placeholder": "Telefon (valfritt)",
+    "language_label": "Språk",
+    "button": "Registrera",
+    "have_account": "Har du redan ett konto?",
+    "login": "Logga in"
+  },
+  "settings": {
+    "title": "Inställningar",
+    "save_template": "Spara mall",
+    "tabs": {
+      "default": "Standardinställningar här",
+      "accounting": "Bokföringsinställningar här",
+      "storage": "Datasektion för lagring här",
+      "custom": "Anpassade extra fält här"
+    }
+  },
+  "settingsTabs": {
+    "company": "Företag",
+    "invoice": "Fakturautseende",
+    "default": "Standardinställningar",
+    "accounting": "Bokföring",
+    "storage": "Datalagring",
+    "custom": "Anpassade extra fält"
+  },
+  "header": {
+    "overview": "Översikt",
+    "buttons": {
+      "new_invoice": "Ny faktura",
+      "new_estimate": "Ny offert",
+      "new_order": "Ny beställning",
+      "new_client": "Ny kund",
+      "new_company": "Nytt företag"
+    }
+  },
+  "invoiceForm": {
+    "title": "Skapa faktura"
+  },
+  "invoiceCustomerFields": {
+    "invoice_from": "Faktura från (Företag)",
+    "select_company": "Välj företag…",
+    "client": "Kund",
+    "select_customer": "Välj kund…",
+    "invoice_no": "Fakturanummer",
+    "your_reference": "Er referens",
+    "invoice_date": "Fakturadatum",
+    "payment_terms": "Betalningsvillkor (dagar)",
+    "due_date": "Förfallodatum",
+    "our_reference": "Vår referens",
+    "language": "Språk",
+    "currency": "Valuta"
+  },
+  "invoiceFormButtons": {
+    "saving": "Sparar...",
+    "create": "Skapa faktura",
+    "cancel": "Avbryt"
+  },
+  "invoiceItemsTable": {
+    "headers": {
+      "product": "Produkt / Tjänst",
+      "text": "Text",
+      "qty": "Antal",
+      "unit": "Enhet",
+      "price": "Pris",
+      "vat": "Moms%",
+      "discount": "Rabatt",
+      "net": "Nettobelopp",
+      "remove": "❌"
+    },
+    "placeholders": {
+      "text_row": "Lägg till en beskrivning eller anteckning (valfritt)",
+      "extra_info": "Extra information"
+    },
+    "buttons": {
+      "add_product": "+ Ny produkt rad",
+      "add_text": "+ Ny text rad"
+    }
+  },
+  "invoiceNotes": {
+    "label": "Anteckningar:"
+  },
+  "invoiceTotals": {
+    "net": "Netto:",
+    "vat": "Moms:",
+    "total": "Totalt:"
+  },
+  "addProductModal": {
+    "title": "Lägg till ny produkt",
+    "create": "Skapa produkt",
+    "error": "Kunde inte skapa produkt",
+    "close": "Stäng"
+  },
+  "productForm": {
+    "placeholders": {
+      "name": "Namn",
+      "unit": "Enhet",
+      "product_code": "Produktkod",
+      "price": "Pris",
+      "tax": "Moms %"
+    },
+    "labels": {
+      "green_tech": "ROT / RUT / Grön teknik"
+    },
+    "buttons": {
+      "cancel": "Avbryt"
+    }
+  },
+  "invoiceAppearance": {
+    "title": "Fakturamall",
+    "templates": {
+      "urban": "Urban",
+      "clean": "Ren",
+      "iconic": "Ikonisk",
+      "foxy": "Foxy",
+      "klaralven": "Klarälven",
+      "original": "Original",
+      "croatia": "Kroatien"
+    }
+  },
+  "languageSwitcher": {
+    "english": "Engelska",
+    "swedish": "Svenska"
+  },
+  "company_form": {
+    "company_name": "Företagsnamn",
+    "org_number": "Organisationsnummer",
+    "vat_number": "Momsregistreringsnummer",
+    "email": "E-post",
+    "bankgiro": "Bankgiro",
+    "send_by": "Skicka faktura via",
+    "send_options": {
+      "email": "E-post",
+      "email_sms": "E-post + SMS",
+      "letter": "Brev",
+      "e_invoice": "E-faktura"
+    },
+    "attach_pdf": "Bifoga alltid en PDF-kopia",
+    "billing": "Fakturaadress",
+    "co": "C/O",
+    "address": "Adress",
+    "city": "Stad",
+    "zip_code": "Postnummer",
+    "country": "Land",
+    "create_button": "Skapa företag",
+    "update_button": "Uppdatera företag",
+    "cancel_button": "Avbryt",
+    "created": "Företaget skapades!",
+    "updated": "Företaget uppdaterades!",
+    "error": "Något gick fel."
+  },
+  "common": {
+    "cancel": "Avbryt",
+    "edit": "Redigera",
+    "delete": "Radera"
+  },
+  "loading": "Laddar...",
+  "companies": {
+    "title": "Dina företag",
+    "add_button": "+ Lägg till företag",
+    "empty": "Inga företag hittades.",
+    "confirm_delete": "Är du säker på att du vill radera detta företag?",
+    "labels": {
+      "org_number": "Organisationsnummer",
+      "vat": "Moms",
+      "email": "E-post",
+      "bankgiro": "Bankgiro",
+      "city": "Stad"
+    },
+    "toast": {
+      "saved": "Företaget sparades!",
+      "deleted": "Företaget raderades!"
+    },
+    "errors": {
+      "fetch_failed": "Misslyckades med att hämta företag",
+      "delete_failed": "Kunde inte radera företag."
     }
   }
 }

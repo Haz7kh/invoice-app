@@ -8,11 +8,14 @@ import InvoiceItemsTable from "./invoice-form/InvoiceItemsTable";
 import InvoiceTotals from "./invoice-form/InvoiceTotals";
 import InvoiceNotes from "./invoice-form/InvoiceNotes";
 import InvoiceFormButtons from "./invoice-form/InvoiceFormButtons";
+import { useTranslation } from "react-i18next";
 
 export default function InvoiceForm({ onCancel, onSubmit }) {
+  const { t } = useTranslation();
+
   const [invoice, setInvoice] = useState({
     customer: "",
-    companyFrom: "", // ✅ new field
+    companyFrom: "",
     invoiceNumber: "",
     invoiceDate: "",
     dueDate: "",
@@ -29,7 +32,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
   const [customers, setCustomers] = useState([]);
   const [companies, setCompanies] = useState([]);
 
-  // 🔄 Load customers
   useEffect(() => {
     (async () => {
       try {
@@ -41,12 +43,10 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     })();
   }, []);
 
-  // 🔄 Load companies (with auth)
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
         const token = localStorage.getItem("token");
-
         if (!token) {
           console.warn("No token found in localStorage");
           return;
@@ -61,18 +61,15 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
         });
 
         const raw = await res.text();
-
-        const data = JSON.parse(raw); // convert manually to catch invalid JSON
+        const data = JSON.parse(raw);
         setCompanies(data);
       } catch (err) {
         console.error("❌ Failed to load companies:", err.message);
       }
     };
-
     fetchCompanies();
   }, []);
 
-  // 🔁 Auto-calculate due date
   useEffect(() => {
     if (!invoice.invoiceDate || !invoice.paymentTerms) return;
     const date = new Date(invoice.invoiceDate);
@@ -83,7 +80,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   }, [invoice.invoiceDate, invoice.paymentTerms]);
 
-  // 🧠 Handle all input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
@@ -99,7 +95,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   };
 
-  // ➕ Add item row
   const addNewItem = () => {
     setInvoice((prev) => ({
       ...prev,
@@ -120,7 +115,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   };
 
-  // ➕ Calculate totals
   const calculateTotals = () => {
     let net = 0,
       vat = 0;
@@ -141,7 +135,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
 
   const { netTotal, vatTotal, grandTotal } = calculateTotals();
 
-  // 📨 Handle Submit
   const handleSubmit = async () => {
     if (
       !invoice.customer ||
@@ -195,10 +188,9 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     setIsSubmitting(false);
   };
 
-  // ✅ Render
   return (
     <div className="ml-64 p-6 max-w-6xl">
-      <h1 className="text-2xl font-bold mb-6">Create Invoice</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("invoiceForm.title")}</h1>
 
       <InvoiceCustomerFields
         invoice={invoice}

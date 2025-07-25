@@ -1,10 +1,13 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function InvoiceFormButtons({
   isSubmitting,
   handleSubmit,
   onCancel,
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="mt-6 flex gap-4">
       <button
@@ -14,10 +17,12 @@ export default function InvoiceFormButtons({
         disabled={isSubmitting}
         onClick={handleSubmit}
       >
-        {isSubmitting ? "Saving..." : "Create Invoice"}
+        {isSubmitting
+          ? t("invoiceFormButtons.saving")
+          : t("invoiceFormButtons.create")}
       </button>
       <button className="px-6 py-2 border rounded" onClick={onCancel}>
-        Cancel
+        {t("invoiceFormButtons.cancel")}
       </button>
     </div>
   );

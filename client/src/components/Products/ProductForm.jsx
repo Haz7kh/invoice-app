@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ProductForm({
   initialData = {},
@@ -6,6 +7,8 @@ export default function ProductForm({
   onCancel,
   submitLabel = "Add Product",
 }) {
+  const { t } = useTranslation();
+
   const [form, setForm] = useState({
     name: "",
     unit: "",
@@ -40,7 +43,7 @@ export default function ProductForm({
         <input
           className="p-2 border col-span-2"
           name="name"
-          placeholder="Name"
+          placeholder={t("productForm.placeholders.name")}
           value={form.name}
           onChange={handleChange}
           required
@@ -48,7 +51,7 @@ export default function ProductForm({
         <input
           className="p-2 border"
           name="unit"
-          placeholder="Unit"
+          placeholder={t("productForm.placeholders.unit")}
           value={form.unit}
           onChange={handleChange}
           required
@@ -56,7 +59,7 @@ export default function ProductForm({
         <input
           className="p-2 border"
           name="productCode"
-          placeholder="Product Code"
+          placeholder={t("productForm.placeholders.product_code")}
           value={form.productCode}
           onChange={handleChange}
           required
@@ -68,7 +71,7 @@ export default function ProductForm({
           className="p-2 border"
           name="price"
           type="number"
-          placeholder="Price"
+          placeholder={t("productForm.placeholders.price")}
           value={form.price}
           onChange={handleChange}
           required
@@ -77,7 +80,7 @@ export default function ProductForm({
           className="p-2 border"
           name="tax"
           type="number"
-          placeholder="Tax %"
+          placeholder={t("productForm.placeholders.tax")}
           value={form.tax}
           onChange={handleChange}
           required
@@ -95,7 +98,7 @@ export default function ProductForm({
             checked={form.isGreenTech}
             onChange={handleChange}
           />
-          ROT / RUT / Green Tech
+          {t("productForm.labels.green_tech")}
         </label>
       </div>
 
@@ -112,7 +115,7 @@ export default function ProductForm({
             onClick={onCancel}
             className="border px-4 py-2 rounded"
           >
-            Cancel
+            {t("productForm.buttons.cancel")}
           </button>
         )}
       </div>

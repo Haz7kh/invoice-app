@@ -3,8 +3,11 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaFileInvoice } from "react-icons/fa";
 import InvoiceForm from "../components/InvoiceForm";
 import { getInvoices, createInvoice } from "../services/api";
+import { useTranslation } from "react-i18next";
 
 export default function Invoices() {
+  const { t } = useTranslation();
+
   const [year, setYear] = useState("2025");
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-12-31");
@@ -53,7 +56,6 @@ export default function Invoices() {
       setLoading(true);
       const newInvoice = await createInvoice(invoiceData);
 
-      // Avoid duplicate push if already exists
       if (allInvoices.some((inv) => inv._id === newInvoice._id)) {
         return;
       }
@@ -66,7 +68,7 @@ export default function Invoices() {
       const message =
         error.response?.data?.message ||
         error.message ||
-        "Error saving invoice";
+        t("invoices.error_saving");
       console.error("Error saving invoice:", error, message);
     } finally {
       setLoading(false);
@@ -76,20 +78,23 @@ export default function Invoices() {
   return (
     <div className="ml-64">
       <div className="py-4 px-6 bg-gray-200 shadow-sm">
-        <h2 className="text-gray-700 text-3xl font-bold">Invoices</h2>
+        <h2 className="text-gray-700 text-3xl font-bold">
+          {t("invoices.title")}
+        </h2>
       </div>
 
+      {/* Top Controls */}
       <div className="flex flex-wrap gap-4 items-center justify-between my-6 px-6">
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition"
         >
           <FaFileInvoice />
-          <span>New invoice</span>
+          <span>{t("invoices.new_invoice")}</span>
         </button>
 
         <button className="cursor-pointer mx-5 flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition">
-          <h3>Report / export</h3>
+          <h3>{t("invoices.report_export")}</h3>
         </button>
 
         <div className="flex items-center gap-2 border px-4 py-2 rounded">
@@ -127,12 +132,13 @@ export default function Invoices() {
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder={t("invoices.search")}
             className="pl-10 pr-4 py-2 rounded-full border outline-none w-64 max-w-full focus:ring-2 focus:ring-green-500"
           />
         </div>
       </div>
 
+      {/* Invoice Form */}
       {showForm && (
         <div className="px-6">
           <InvoiceForm
@@ -142,20 +148,19 @@ export default function Invoices() {
         </div>
       )}
 
+      {/* Invoice Table */}
       <div className="px-6">
         {filteredInvoices.length === 0 ? (
-          <p className="text-gray-500">
-            No invoices found for the selected date range.
-          </p>
+          <p className="text-gray-500">{t("invoices.no_results")}</p>
         ) : (
           <table className="w-full border-collapse mt-4 shadow-md bg-white rounded">
             <thead className="bg-gray-100 text-left">
               <tr>
                 <th className="p-3">#</th>
-                <th className="p-3">Customer</th>
-                <th className="p-3">Date</th>
-                <th className="p-3">Total</th>
-                <th className="p-3">Action</th>
+                <th className="p-3">{t("invoices.customer")}</th>
+                <th className="p-3">{t("invoices.date")}</th>
+                <th className="p-3">{t("invoices.total")}</th>
+                <th className="p-3">{t("invoices.action")}</th>
               </tr>
             </thead>
             <tbody>
@@ -165,12 +170,12 @@ export default function Invoices() {
                   <td className="p-3">
                     {invoice.customer?.companyName ||
                       invoice.customer?.email ||
-                      "Unknown"}
+                      t("invoices.unknown")}
                   </td>
                   <td className="p-3">
                     {invoice.invoiceDate
                       ? new Date(invoice.invoiceDate).toLocaleDateString()
-                      : "No Date"}
+                      : t("invoices.no_date")}
                   </td>
                   <td className="p-3">
                     {invoice.grandTotal
@@ -179,11 +184,9 @@ export default function Invoices() {
                         }`
                       : "0.00"}
                   </td>
-
-                  {/* 👉 Add the print button here */}
                   <td className="p-3">
                     <button
-                      title="Print Invoice"
+                      title={t("invoices.print_invoice")}
                       className="text-blue-600 hover:underline"
                       onClick={() =>
                         window.open(`/print/${invoice._id}`, "_blank")

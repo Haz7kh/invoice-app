@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Register() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -29,10 +31,7 @@ export default function Register() {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+      if (!res.ok) throw new Error(data.message || "Registration failed");
 
       localStorage.setItem("token", data.token);
       navigate("/overview");
@@ -47,14 +46,16 @@ export default function Register() {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded shadow-md w-full max-w-sm space-y-4"
       >
-        <h2 className="text-2xl font-semibold text-center">Create Account</h2>
+        <h2 className="text-2xl font-semibold text-center">
+          {t("register.title")}
+        </h2>
 
         {error && <div className="text-red-600 text-sm">{error}</div>}
 
         <input
           type="text"
           name="name"
-          placeholder="Full Name"
+          placeholder={t("register.name_placeholder")}
           value={form.name}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
@@ -64,7 +65,7 @@ export default function Register() {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder={t("register.email_placeholder")}
           value={form.email}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
@@ -74,7 +75,7 @@ export default function Register() {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder={t("register.password_placeholder")}
           value={form.password}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
@@ -84,7 +85,7 @@ export default function Register() {
         <input
           type="text"
           name="phone"
-          placeholder="Phone (optional)"
+          placeholder={t("register.phone_placeholder")}
           value={form.phone}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
@@ -97,23 +98,23 @@ export default function Register() {
           className="w-full p-2 border border-gray-300 rounded"
         >
           <option value="en">English</option>
-          <option value="sv">Swedish</option>
+          <option value="sv">Svenska</option>
         </select>
 
         <button
           type="submit"
           className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
         >
-          Register
+          {t("register.button")}
         </button>
 
         <div className="text-sm text-center">
-          Already have an account?{" "}
+          {t("register.have_account")}{" "}
           <span
             className="text-blue-600 underline cursor-pointer"
             onClick={() => navigate("/login")}
           >
-            Login
+            {t("register.login")}
           </span>
         </div>
       </form>

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -24,11 +26,8 @@ export default function Login() {
         throw new Error(result.message || "Login failed");
       }
 
-      // Save token (optional: validate or decode if needed)
       localStorage.setItem("token", result.token);
-
-      // Redirect after successful login
-      navigate("/overview"); // Change to your actual route
+      navigate("/overview");
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
     }
@@ -40,7 +39,9 @@ export default function Login() {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded shadow-md w-full max-w-sm"
       >
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          {t("login.title")}
+        </h2>
 
         {error && (
           <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
@@ -50,7 +51,7 @@ export default function Login() {
 
         <div className="mb-4">
           <label htmlFor="email" className="block mb-1 font-medium">
-            Email
+            {t("login.email")}
           </label>
           <input
             id="email"
@@ -59,13 +60,13 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
-            placeholder="you@example.com"
+            placeholder={t("login.placeholder_email")}
           />
         </div>
 
         <div className="mb-6">
           <label htmlFor="password" className="block mb-1 font-medium">
-            Password
+            {t("login.password")}
           </label>
           <input
             id="password"
@@ -74,7 +75,7 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
-            placeholder="••••••••"
+            placeholder={t("login.placeholder_password")}
           />
         </div>
 
@@ -82,15 +83,15 @@ export default function Login() {
           type="submit"
           className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200"
         >
-          Login
+          {t("login.button")}
         </button>
         <div className="text-sm text-center mt-4">
-          Don’t have an account?{" "}
+          {t("login.no_account")}{" "}
           <span
             className="text-blue-600 underline cursor-pointer"
             onClick={() => navigate("/register")}
           >
-            Register here
+            {t("login.register")}
           </span>
         </div>
       </form>

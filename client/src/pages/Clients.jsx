@@ -73,7 +73,6 @@ export default function Clients() {
       const newC = await createClient(formData);
       setClients((prev) => [newC, ...prev]);
       setNewClient(false);
-      // Reset form for next time
       setFormData({
         type: "",
         companyName: "",
@@ -99,7 +98,7 @@ export default function Clients() {
     setNewClient(false);
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <div className="p-6">{t("loading")}</div>;
   if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
 
   return (
@@ -138,9 +137,9 @@ export default function Clients() {
 
       {!newClient ? (
         <>
-          <h1 className="text-2xl font-bold mb-4">Clients</h1>
+          <h1 className="text-2xl font-bold mb-4">{t("clients.title")}</h1>
           {clients.length === 0 ? (
-            <p>No clients found.</p>
+            <p>{t("clients.empty")}</p>
           ) : (
             <table className="min-w-full bg-white border border-gray-200 rounded shadow">
               <thead className="bg-gray-100 text-gray-700 text-sm">
@@ -200,7 +199,7 @@ export default function Clients() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h2 className="text-xl font-semibold mb-2 text-gray-800">
-                General
+                {t("clients.form.general")}
               </h2>
               <div className="flex items-center gap-4 mb-4">
                 <label className="flex items-center gap-2">
@@ -211,8 +210,7 @@ export default function Clients() {
                     checked={formData.type === "company"}
                     onChange={handleChange}
                   />
-
-                  <span>Company</span>
+                  <span>{t("clients.form.company")}</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -222,12 +220,11 @@ export default function Clients() {
                     checked={formData.type === "person"}
                     onChange={handleChange}
                   />
-
-                  <span>Person</span>
+                  <span>{t("clients.form.person")}</span>
                 </label>
               </div>
               <label className="block text-sm font-semibold text-gray-700">
-                Company Name
+                {t("clients.form.company_name")}
               </label>
               <input
                 name="companyName"
@@ -239,7 +236,7 @@ export default function Clients() {
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <label className="block text-sm font-semibold text-gray-700">
-                    Company Reg. No.
+                    {t("clients.form.reg_no")}
                   </label>
                   <input
                     name="orgNumber"
@@ -251,7 +248,7 @@ export default function Clients() {
                 </div>
                 <div className="w-1/2">
                   <label className="block text-sm font-semibold text-gray-700">
-                    VAT No.
+                    {t("clients.form.vat_no")}
                   </label>
                   <input
                     name="vatNumber"
@@ -263,7 +260,7 @@ export default function Clients() {
                 </div>
               </div>
               <label className="block text-sm font-semibold text-gray-700">
-                Email
+                {t("clients.form.email")}
               </label>
               <input
                 name="email"
@@ -273,14 +270,26 @@ export default function Clients() {
                 type="email"
               />
               <h3 className="text-sm font-semibold text-gray-700 mt-4 mb-2">
-                Send invoice by
+                {t("clients.form.send_by")}
               </h3>
               <div className="flex flex-wrap gap-4">
                 {[
-                  { label: "Email", value: "email" },
-                  { label: "E-post + SMS", value: "e-post_sms" },
-                  { label: "Letter", value: "letter" },
-                  { label: "E-invoice", value: "e-invoice" },
+                  {
+                    label: t("clients.form.send_options.email"),
+                    value: "email",
+                  },
+                  {
+                    label: t("clients.form.send_options.email_sms"),
+                    value: "e-post_sms",
+                  },
+                  {
+                    label: t("clients.form.send_options.letter"),
+                    value: "letter",
+                  },
+                  {
+                    label: t("clients.form.send_options.e_invoice"),
+                    value: "e-invoice",
+                  },
                 ].map(({ label, value }, i) => (
                   <label key={i} className="flex items-center gap-2">
                     <input
@@ -301,7 +310,7 @@ export default function Clients() {
                   checked={formData.attachPdf}
                   onChange={handleChange}
                 />
-                <span>Always attach a PDF copy in emails</span>
+                <span>{t("clients.form.attach_pdf")}</span>
               </label>
             </div>
 
@@ -309,16 +318,16 @@ export default function Clients() {
               <div className="flex gap-6 mb-4">
                 <div>
                   <button className="cursor-pointer text-center font-semibold text-green-600">
-                    Billing Address
+                    {t("clients.form.billing")}
                   </button>
                   <div className="h-0.5 bg-green-500 w-full mt-1"></div>
                 </div>
                 <button className="cursor-pointer text-center font-semibold text-gray-500">
-                  Delivery Address
+                  {t("clients.form.delivery")}
                 </button>
               </div>
               <label className="block text-sm font-semibold text-gray-700 md:mt-12">
-                C/O
+                {t("clients.form.co")}
               </label>
               <input
                 name="billingAddress.co"
@@ -328,7 +337,7 @@ export default function Clients() {
                 type="text"
               />
               <label className="block text-sm font-semibold text-gray-700">
-                Address
+                {t("clients.form.address")}
               </label>
               <input
                 name="billingAddress.address"
@@ -340,7 +349,7 @@ export default function Clients() {
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <label className="block text-sm font-semibold text-gray-700">
-                    Zip Code
+                    {t("clients.form.zip")}
                   </label>
                   <input
                     name="billingAddress.zipCode"
@@ -352,7 +361,7 @@ export default function Clients() {
                 </div>
                 <div className="w-1/2">
                   <label className="block text-sm font-semibold text-gray-700">
-                    City
+                    {t("clients.form.city")}
                   </label>
                   <input
                     name="billingAddress.city"
@@ -364,7 +373,7 @@ export default function Clients() {
                 </div>
               </div>
               <label className="block text-sm font-semibold text-gray-700">
-                Country
+                {t("clients.form.country")}
               </label>
               <select
                 name="billingAddress.country"
@@ -381,7 +390,7 @@ export default function Clients() {
 
           <div className="my-6 border-t border-gray-300" />
           <h2 className="text-center text-sm font-semibold text-gray-600 mb-2 cursor-pointer hover:text-green-600 transition">
-            Show detailed settings
+            {t("clients.form.details")}
           </h2>
           <div className="border-t border-gray-300 mb-6" />
 
@@ -390,13 +399,13 @@ export default function Clients() {
               onClick={handleSubmit}
               className="cursor-pointer bg-green-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-600 transition"
             >
-              Create Client
+              {t("clients.form.create")}
             </button>
             <button
               onClick={handleCancel}
               className="cursor-pointer bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300 transition"
             >
-              Cancel
+              {t("clients.form.cancel")}
             </button>
           </div>
         </div>

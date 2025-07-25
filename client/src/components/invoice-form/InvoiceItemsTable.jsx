@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ProductAutocompleteInput from "../ProductAutocompleteInput";
 import AddProductModal from "../Products/AddProductModal";
+import { useTranslation } from "react-i18next";
 
 export default function InvoiceItemsTable({
   items,
@@ -8,6 +9,7 @@ export default function InvoiceItemsTable({
   invoice,
   addNewItem,
 }) {
+  const { t } = useTranslation();
   const [showProductModal, setShowProductModal] = useState(false);
   const [productInitialName, setProductInitialName] = useState("");
   const [productRowIndex, setProductRowIndex] = useState(null);
@@ -27,15 +29,27 @@ export default function InvoiceItemsTable({
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-gray-100">
-            <th className="p-2 border">Product / Service</th>
-            <th className="p-2 border">Text</th>
-            <th className="p-2 border">Qty</th>
-            <th className="p-2 border">Unit</th>
-            <th className="p-2 border">Price</th>
-            <th className="p-2 border">VAT%</th>
-            <th className="p-2 border">Discount</th>
-            <th className="p-2 border">Net</th>
-            <th className="p-2 border">❌</th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.product")}
+            </th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.text")}
+            </th>
+            <th className="p-2 border">{t("invoiceItemsTable.headers.qty")}</th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.unit")}
+            </th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.price")}
+            </th>
+            <th className="p-2 border">{t("invoiceItemsTable.headers.vat")}</th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.discount")}
+            </th>
+            <th className="p-2 border">{t("invoiceItemsTable.headers.net")}</th>
+            <th className="p-2 border">
+              {t("invoiceItemsTable.headers.remove")}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -46,7 +60,7 @@ export default function InvoiceItemsTable({
                   <td className="p-2 border" colSpan={8}>
                     <textarea
                       className="w-full border rounded p-2"
-                      placeholder="Add a description or note (optional)"
+                      placeholder={t("invoiceItemsTable.placeholders.text_row")}
                       value={item.text}
                       maxLength={255}
                       rows={3}
@@ -76,7 +90,6 @@ export default function InvoiceItemsTable({
               );
             }
 
-            // ...your old product/service row code below!
             const qty = parseFloat(item.quantity || 0);
             const price = parseFloat(item.price || 0);
             const disc = item.discountPercent || 0;
@@ -84,7 +97,6 @@ export default function InvoiceItemsTable({
 
             return (
               <tr key={i}>
-                {/* ...the product/service row code as before */}
                 <td className="p-2 border">
                   <ProductAutocompleteInput
                     onSelect={(prod) => {
@@ -116,7 +128,7 @@ export default function InvoiceItemsTable({
                       setInvoice({ ...invoice, items: u });
                     }}
                     className="w-full border p-1"
-                    placeholder="Extra info"
+                    placeholder={t("invoiceItemsTable.placeholders.extra_info")}
                   />
                 </td>
                 <td className="p-2 border">
@@ -170,24 +182,22 @@ export default function InvoiceItemsTable({
           onClick={addNewItem}
           className="px-4 py-2 bg-blue-600 text-white rounded"
         >
-          + New Product row
+          {t("invoiceItemsTable.buttons.add_product")}
         </button>
 
         <button
           onClick={addNewTextRow}
           className="px-4 py-2 bg-white border rounded ml-2"
         >
-          + New text row
+          {t("invoiceItemsTable.buttons.add_text")}
         </button>
       </div>
 
-      {/* Modal rendered outside the table */}
       {showProductModal && (
         <AddProductModal
           initialName={productInitialName}
           onClose={() => setShowProductModal(false)}
           onProductCreated={(newProduct) => {
-            // Update only the correct item row
             const updated = [...items];
             updated[productRowIndex] = {
               ...updated[productRowIndex],

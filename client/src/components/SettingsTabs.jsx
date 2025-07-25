@@ -1,15 +1,18 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const tabs = [
-  { name: "Company", value: "company" },
-  { name: "Invoice appearance", value: "invoice" },
-  { name: "Default settings", value: "default" },
-  { name: "Accounting", value: "accounting" },
-  { name: "Data storage", value: "storage" },
-  { name: "Custom extra fields", value: "custom" },
+  { nameKey: "settingsTabs.company", value: "company" },
+  { nameKey: "settingsTabs.invoice", value: "invoice" },
+  { nameKey: "settingsTabs.default", value: "default" },
+  { nameKey: "settingsTabs.accounting", value: "accounting" },
+  { nameKey: "settingsTabs.storage", value: "storage" },
+  { nameKey: "settingsTabs.custom", value: "custom" },
 ];
 
 export default function SettingsTabs({ active, onChange }) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex space-x-4 border-b mb-6">
       {tabs.map((tab) => (
@@ -22,7 +25,7 @@ export default function SettingsTabs({ active, onChange }) {
           }`}
           onClick={() => onChange(tab.value)}
         >
-          {tab.name}
+          {t(tab.nameKey)}
         </button>
       ))}
     </div>
