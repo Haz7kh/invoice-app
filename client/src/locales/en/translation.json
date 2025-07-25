@@ -266,8 +266,8 @@
     }
   },
   "languageSwitcher": {
-    "english": "English",
-    "swedish": "Swedish"
+    "en": "English",
+    "sv": "Swedish"
   },
   "company_form": {
     "company_name": "Company Name",

@@ -13,10 +13,10 @@ import {
 import logo from "../assets/Invoicelogowhite.svg";
 import { getCurrentUserData } from "../services/api";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useTranslation } from "react-i18next"; // ✅ Import i18n hook
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar() {
-  const { t } = useTranslation(); // ✅ Hook
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -83,10 +83,12 @@ export default function Sidebar() {
 
   return (
     <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100 fixed print:hidden">
+      {/* Logo */}
       <div className="p-4 flex items-center space-x-2">
         <img src={logo} alt="Logo" className="h-8 w-auto" />
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 px-4 space-y-2">
         {navItems.map(({ name, path, icon }) => (
           <NavLink
@@ -102,9 +104,16 @@ export default function Sidebar() {
             {name}
           </NavLink>
         ))}
+
+        {/* ✅ Language Switcher now lives under the nav items */}
+        <div className="pt-4 border-t border-gray-700">
+          <LanguageSwitcher />
+        </div>
       </nav>
 
+      {/* User & Language */}
       <div className="p-4 border-t border-gray-700 space-y-3">
+        {/* User Profile Dropdown */}
         <button
           className="flex items-center space-x-3 w-full"
           onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -145,8 +154,6 @@ export default function Sidebar() {
             </button>
           </div>
         )}
-
-        <LanguageSwitcher />
       </div>
     </div>
   );

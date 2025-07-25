@@ -265,8 +265,8 @@
     }
   },
   "languageSwitcher": {
-    "english": "Engelska",
-    "swedish": "Svenska"
+    "en": "Engelska",
+    "sv": "Svenska"
   },
   "company_form": {
     "company_name": "Företagsnamn",
