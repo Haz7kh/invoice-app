@@ -180,14 +180,14 @@ export default function InvoiceItemsTable({
       <div className="flex gap-3 mt-4">
         <button
           onClick={addNewItem}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="px-4 py-2 bg-blue-600 text-white cursor-pointer rounded"
         >
           {t("invoiceItemsTable.buttons.add_product")}
         </button>
 
         <button
           onClick={addNewTextRow}
-          className="px-4 py-2 bg-white border rounded ml-2"
+          className="px-4 py-2 bg-white border cursor-pointer rounded ml-2"
         >
           {t("invoiceItemsTable.buttons.add_text")}
         </button>

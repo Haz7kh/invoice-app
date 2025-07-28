@@ -34,17 +34,17 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+        className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-6 rounded shadow-md w-full max-w-sm transition-colors duration-300"
       >
         <h2 className="text-2xl font-semibold text-center mb-6">
           {t("login.title")}
         </h2>
 
         {error && (
-          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
+          <div className="bg-red-100 dark:bg-red-400 text-red-700 dark:text-red-100 p-2 mb-4 rounded text-sm">
             {error}
           </div>
         )}
@@ -59,7 +59,7 @@ export default function Login() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder={t("login.placeholder_email")}
           />
         </div>
@@ -74,21 +74,22 @@ export default function Login() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder={t("login.placeholder_password")}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200"
+          className="w-full bg-green-600 dark:bg-green-700 text-white py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 transition duration-200"
         >
           {t("login.button")}
         </button>
+
         <div className="text-sm text-center mt-4">
           {t("login.no_account")}{" "}
           <span
-            className="text-blue-600 underline cursor-pointer"
+            className="text-blue-600 dark:text-blue-400 underline cursor-pointer"
             onClick={() => navigate("/register")}
           >
             {t("login.register")}

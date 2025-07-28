@@ -82,7 +82,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-gray-800 text-gray-100 fixed print:hidden">
+    <div className="flex flex-col w-64 h-screen bg-[#3D365C] text-gray-100 fixed print:hidden">
       {/* Logo */}
       <div className="p-4 flex items-center space-x-2">
         <img src={logo} alt="Logo" className="h-8 w-auto" />
@@ -95,8 +95,8 @@ export default function Sidebar() {
             key={name}
             to={path}
             className={({ isActive }) =>
-              `flex items-center px-3 py-2 rounded-md hover:bg-gray-700 ${
-                isActive ? "bg-gray-700 font-semibold" : ""
+              `flex items-center px-3 py-2 rounded-md hover:bg-[#7C4585] ${
+                isActive ? "bg-[#7C4585] font-semibold" : ""
               }`
             }
           >
@@ -109,6 +109,23 @@ export default function Sidebar() {
         <div className="pt-4 border-t border-gray-700">
           <LanguageSwitcher />
         </div>
+        <div className="mt-4 px-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white">
+              {t("sidebar.toggle_theme") || "Dark Mode"}
+            </span>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                onChange={() =>
+                  document.documentElement.classList.toggle("dark")
+                }
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-offset-2 peer-focus:ring-secondary dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+            </label>
+          </div>
+        </div>
       </nav>
 
       {/* User & Language */}
@@ -118,7 +135,7 @@ export default function Sidebar() {
           className="flex items-center space-x-3 w-full"
           onClick={() => setUserDropdownOpen(!userDropdownOpen)}
         >
-          <div className="rounded-full bg-gray-600 h-8 w-8 flex items-center justify-center font-semibold">
+          <div className="rounded-full bg-[#7C4585] h-8 w-8 flex items-center justify-center font-semibold">
             {initials}
           </div>
           <div className="flex flex-col text-left">
@@ -148,7 +165,7 @@ export default function Sidebar() {
           <div className="text-sm space-y-1">
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-2 py-1 hover:bg-gray-700 rounded"
+              className="block w-full text-left px-2 py-1 hover:bg-[#7C4585] rounded"
             >
               {t("sidebar.logout")}
             </button>

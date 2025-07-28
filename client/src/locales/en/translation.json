@@ -8,7 +8,8 @@
     "products": "Products",
     "settings": "Settings",
     "logout": "Logout",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "toggle_theme": "Dark Mode"
   },
 
   "overview": {
@@ -271,6 +272,10 @@
   },
   "company_form": {
     "company_name": "Company Name",
+    "title": "Company Details",
+    "subtitle": "Manage your company identity and billing information",
+    "company_info": "Company Information",
+
     "org_number": "Org Number",
     "vat_number": "VAT Number",
     "email": "Email",
@@ -306,6 +311,7 @@
     "title": "Your Companies",
     "add_button": "+ Add Company",
     "empty": "No companies found.",
+
     "confirm_delete": "Are you sure you want to delete this company?",
     "labels": {
       "org_number": "Org Number",

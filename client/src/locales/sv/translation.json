@@ -8,7 +8,8 @@
     "products": "Produkter",
     "settings": "Inställningar",
     "logout": "Logga ut",
-    "unknown": "Okänd"
+    "unknown": "Okänd",
+    "toggle_theme": "Mörkt läge"
   },
   "overview": {
     "welcome_title": "Välkommen till <1>EasyInvoice</1>",

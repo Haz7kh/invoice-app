@@ -4,6 +4,8 @@ import { FaSearch, FaFileInvoice } from "react-icons/fa";
 import InvoiceForm from "../components/InvoiceForm";
 import { getInvoices, createInvoice } from "../services/api";
 import { useTranslation } from "react-i18next";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Invoices() {
   const { t } = useTranslation();
@@ -87,7 +89,7 @@ export default function Invoices() {
       <div className="flex flex-wrap gap-4 items-center justify-between my-6 px-6">
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition"
+          className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 cursor-pointer rounded shadow hover:bg-green-600 transition"
         >
           <FaFileInvoice />
           <span>{t("invoices.new_invoice")}</span>
@@ -114,17 +116,24 @@ export default function Invoices() {
         </div>
 
         <div className="flex gap-2">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+          <DatePicker
+            selected={startDate ? new Date(startDate) : null}
+            onChange={(date) =>
+              setStartDate(date ? date.toISOString().split("T")[0] : "")
+            }
+            dateFormat="yyyy-MM-dd"
             className="border px-2 py-1 rounded"
+            placeholderText="YYYY-MM-DD"
           />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+
+          <DatePicker
+            selected={endDate ? new Date(endDate) : null}
+            onChange={(date) =>
+              setEndDate(date ? date.toISOString().split("T")[0] : "")
+            }
+            dateFormat="yyyy-MM-dd"
             className="border px-2 py-1 rounded"
+            placeholderText="YYYY-MM-DD"
           />
         </div>
 
@@ -174,9 +183,12 @@ export default function Invoices() {
                   </td>
                   <td className="p-3">
                     {invoice.invoiceDate
-                      ? new Date(invoice.invoiceDate).toLocaleDateString()
+                      ? new Date(invoice.invoiceDate)
+                          .toISOString()
+                          .split("T")[0]
                       : t("invoices.no_date")}
                   </td>
+
                   <td className="p-3">
                     {invoice.grandTotal
                       ? `${invoice.grandTotal.toFixed(2)} ${

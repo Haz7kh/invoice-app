@@ -1,5 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function InvoiceCustomerFields({
   invoice,
@@ -77,12 +79,19 @@ export default function InvoiceCustomerFields({
         <label className="block font-medium">
           {t("invoiceCustomerFields.invoice_date")}
         </label>
-        <input
-          type="date"
-          name="invoiceDate"
-          value={invoice.invoiceDate}
-          onChange={handleChange}
+        <DatePicker
+          selected={invoice.invoiceDate ? new Date(invoice.invoiceDate) : null}
+          onChange={(date) =>
+            handleChange({
+              target: {
+                name: "invoiceDate",
+                value: date.toISOString().split("T")[0],
+              },
+            })
+          }
+          dateFormat="yyyy-MM-dd"
           className="w-full border p-2 rounded"
+          placeholderText="YYYY-MM-DD"
         />
       </div>
 
@@ -103,12 +112,13 @@ export default function InvoiceCustomerFields({
         <label className="block font-medium">
           {t("invoiceCustomerFields.due_date")}
         </label>
-        <input
-          type="date"
-          name="dueDate"
-          value={invoice.dueDate}
+        <DatePicker
+          selected={invoice.dueDate ? new Date(invoice.dueDate) : null}
+          onChange={() => {}} // No change because it's read-only
+          dateFormat="yyyy-MM-dd"
+          className="w-full border p-2 rounded bg-gray-100 cursor-not-allowed"
+          placeholderText="YYYY-MM-DD"
           readOnly
-          className="w-full border p-2 rounded bg-gray-100"
         />
       </div>
 

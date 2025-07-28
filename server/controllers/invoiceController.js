@@ -85,7 +85,7 @@ exports.createInvoice = async (req, res) => {
       processedItems.push({
         type: "product",
         productId,
-        productCode, // ✅ now correctly included
+        productCode,
         product,
         text,
         quantity,
@@ -125,6 +125,7 @@ exports.createInvoice = async (req, res) => {
         "companyName address zip city orgNumber email phone"
       );
 
+    // Dates are automatically formatted by toJSON
     return res.status(201).json(populated);
   } catch (err) {
     console.error("💥 Error in createInvoice:", err);
@@ -134,13 +135,14 @@ exports.createInvoice = async (req, res) => {
 
 exports.getInvoices = async (req, res) => {
   try {
-    const userId = req.user.id; // 🔒 always filter by logged-in user
+    const userId = req.user.id;
     const filter = { user: userId };
 
     const invoices = await Invoice.find(filter)
       .populate("customer", "companyName email")
       .sort({ createdAt: -1 });
 
+    // Dates auto-format in toJSON
     res.json(invoices);
   } catch (err) {
     console.error(err);
@@ -164,7 +166,8 @@ exports.getInvoiceById = async (req, res) => {
       return res.status(404).json({ message: "Invoice not found" });
     }
 
-    res.json(invoice);
+    // Dates auto-format in toJSON
+    res.json(invoice.toJSON());
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch invoice" });

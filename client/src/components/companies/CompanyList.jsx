@@ -89,7 +89,7 @@ export default function Companies() {
             setEditMode(false);
             setEditingCompany(null);
           }}
-          className="cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition"
+          className="cursor-pointer bg-[#3D365C] hover:bg-[#7C4585] text-white font-semibold px-5 py-2.5 rounded-lg shadow transition"
         >
           {showForm && !editMode
             ? t("common.cancel")
@@ -109,60 +109,77 @@ export default function Companies() {
       )}
 
       {/* List */}
+      {/* Company List */}
       {companies.length === 0 ? (
         <p className="text-gray-500">{t("companies.empty")}</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-4">
           {companies.map((company) => (
             <div
               key={company._id}
-              className="bg-white rounded-xl shadow border border-gray-200 p-5 relative"
+              className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-md transition relative"
             >
-              <div className="absolute top-3 right-3 flex gap-2">
+              {/* Action Buttons */}
+              <div className="absolute top-4 right-4 flex gap-2">
                 <button
                   onClick={() => handleEdit(company)}
-                  className="cursor-pointer text-blue-600 hover:text-blue-800"
+                  className="text-blue-600 hover:text-blue-800"
                   title={t("common.edit")}
                 >
                   <FaEdit />
                 </button>
                 <button
                   onClick={() => handleDelete(company._id)}
-                  className="cursor-pointer text-red-500 hover:text-red-700"
+                  className="text-red-500 hover:text-red-700"
                   title={t("common.delete")}
                 >
                   <FaTrash />
                 </button>
               </div>
 
-              <h3 className="text-lg font-semibold mb-2 text-gray-800">
+              {/* Company Name */}
+              <h3 className="text-xl font-semibold text-[#3D365C] mb-2">
                 {company.companyName}
               </h3>
 
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>
-                  <strong>{t("companies.labels.org_number")}:</strong>{" "}
-                  {company.orgNumber}
-                </li>
-                <li>
-                  <strong>{t("companies.labels.vat")}:</strong>{" "}
-                  {company.vatNumber}
-                </li>
-                <li className="text-blue-500">
-                  <strong className="text-gray-600">
+              {/* Company Details List */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-1 gap-x-4 text-sm text-gray-700">
+                <div>
+                  <span className="font-medium">
+                    {t("companies.labels.org_number")}:
+                  </span>{" "}
+                  {company.orgNumber || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">
+                    {t("companies.labels.vat")}:
+                  </span>{" "}
+                  {company.vatNumber || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">
                     {t("companies.labels.email")}:
-                  </strong>{" "}
-                  {company.email}
-                </li>
-                <li>
-                  <strong>{t("companies.labels.bankgiro")}:</strong>{" "}
-                  {company.bankgiro}
-                </li>
-                <li>
-                  <strong>{t("companies.labels.city")}:</strong>{" "}
-                  {company.billingAddress?.city}
-                </li>
-              </ul>
+                  </span>{" "}
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="text-blue-600 underline"
+                  >
+                    {company.email || "-"}
+                  </a>
+                </div>
+                <div>
+                  <span className="font-medium">
+                    {t("companies.labels.bankgiro")}:
+                  </span>{" "}
+                  {company.bankgiro || "-"}
+                </div>
+                <div>
+                  <span className="font-medium">
+                    {t("companies.labels.city")}:
+                  </span>{" "}
+                  {company.billingAddress?.city || "-"}
+                </div>
+              </div>
             </div>
           ))}
         </div>
