@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+
+const SUPPORTED = ["en", "sv"];
+const LABELS = { en: "English", sv: "Svenska" }; // fallback labels
+
+const normalize = (lng) => {
+  const base = (lng || "en").split("-")[0].toLowerCase();
+  return SUPPORTED.includes(base) ? base : "en";
+};
 
 export default function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
@@ -10,13 +18,27 @@ export default function LanguageSwitcher() {
     { code: "sv", flag: "🇸🇪" },
   ];
 
+  // normalized current language (handles sv-SE, en-GB, ar-SA, etc.)
+  const currentCode = useMemo(() => {
+    const raw =
+      i18n.resolvedLanguage || i18n.language || navigator.language || "en";
+    return normalize(raw);
+  }, [i18n.resolvedLanguage, i18n.language]);
+
+  // if i18n was started with something unsupported, force it to en
+  useEffect(() => {
+    if (!SUPPORTED.includes(currentCode)) {
+      i18n.changeLanguage("en");
+    }
+  }, [currentCode, i18n]);
+
   const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+    i18n.changeLanguage(normalize(lng));
     setOpen(false);
   };
 
-  const currentLang = languages.find((l) => l.code === i18n.language);
-
+  const currentLang =
+    languages.find((l) => l.code === currentCode) || languages[0];
   return (
     <div className="relative inline-block text-left">
       <button

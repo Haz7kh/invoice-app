@@ -52,9 +52,13 @@ const styles = StyleSheet.create({
   },
   totalsBox: {
     alignSelf: "flex-end",
-    marginTop: 12,
+    marginTop: 10,
     width: 200,
+    padding: 8,
+    border: "1pt solid #000", // solid black border
+    backgroundColor: "#fff", // optional: white background
   },
+
   totalsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -98,7 +102,7 @@ const InvoicePDF = ({ invoice }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View>
+        <View style={{ flexGrow: 1 }}>
           {/* HEADER */}
           <View style={styles.headerRow}>
             <View>
@@ -280,8 +284,9 @@ const InvoicePDF = ({ invoice }) => {
               );
             })}
           </View>
-
-          {/* TOTALS */}
+        </View>
+        {/* TOTALS */}
+        <View style={{ marginBottom: 30 }}>
           <View style={styles.totalsBox}>
             <View style={styles.totalsRow}>
               <Text>{t("invoice.totals.subtotal")}</Text>
@@ -301,7 +306,6 @@ const InvoicePDF = ({ invoice }) => {
             </View>
           </View>
         </View>
-
         {/* FOOTER */}
         <View style={styles.footer}>
           <View style={styles.footerCol}>
