@@ -58,7 +58,8 @@ export default function InvoiceCustomerFields({
         <input
           name="invoiceNumber"
           value={invoice.invoiceNumber}
-          onChange={handleChange}
+          // onChange={handleChange}
+          readOnly
           className="w-full border p-2 rounded"
         />
       </div>

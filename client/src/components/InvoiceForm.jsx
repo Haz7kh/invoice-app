@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { getClients } from "../services/api";
 import ProductAutocompleteInput from "./ProductAutocompleteInput";
-
 import InvoiceCustomerFields from "./invoice-form/InvoiceCustomerFields";
 import InvoiceItemsTable from "./invoice-form/InvoiceItemsTable";
 import InvoiceTotals from "./invoice-form/InvoiceTotals";
@@ -12,11 +11,11 @@ import { useTranslation } from "react-i18next";
 
 export default function InvoiceForm({ onCancel, onSubmit }) {
   const { t } = useTranslation();
-
+  const [invoiceSequence, setInvoiceSequence] = useState(1);
   const [invoice, setInvoice] = useState({
     customer: "",
     companyFrom: "",
-    invoiceNumber: "",
+    invoiceNumber: "Auto",
     invoiceDate: "",
     dueDate: "",
     paymentTerms: 30,
@@ -51,7 +50,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
           console.warn("No token found in localStorage");
           return;
         }
-
         const res = await fetch("http://localhost:3000/api/companies", {
           method: "GET",
           headers: {
@@ -59,7 +57,6 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
             "Content-Type": "application/json",
           },
         });
-
         const raw = await res.text();
         const data = JSON.parse(raw);
         setCompanies(data);
@@ -69,6 +66,28 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     };
     fetchCompanies();
   }, []);
+
+  // دالة للحصول على آخر رقم تسلسلي للشركة من localStorage
+  const getLastInvoiceSequence = (companyId) => {
+    try {
+      const sequences = JSON.parse(localStorage.getItem('invoiceSequences') || '{}');
+      return sequences[companyId] || 1;
+    } catch (error) {
+      console.error("Error getting last sequence:", error);
+      return 1;
+    }
+  };
+
+  // دالة لحفظ آخر رقم تسلسلي للشركة في localStorage
+  const saveLastInvoiceSequence = (companyId, sequence) => {
+    try {
+      const sequences = JSON.parse(localStorage.getItem('invoiceSequences') || '{}');
+      sequences[companyId] = sequence;
+      localStorage.setItem('invoiceSequences', JSON.stringify(sequences));
+    } catch (error) {
+      console.error("Error saving sequence:", error);
+    }
+  };
 
   useEffect(() => {
     if (!invoice.invoiceDate || !invoice.paymentTerms) return;
@@ -80,10 +99,28 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
     }));
   }, [invoice.invoiceDate, invoice.paymentTerms]);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
-    let newValue = value;
+    
+    if (name === "companyFrom") {
+      const selectedCompany = companies.find((c) => c._id === value);
+      if (selectedCompany) {
+        // جلب آخر رقم تسلسلي للشركة المحددة من localStorage
+        const lastSequence = getLastInvoiceSequence(value);
+        setInvoiceSequence(lastSequence);
+        
+        setInvoice((prev) => ({
+          ...prev,
+          companyFrom: value,
+          invoiceNumber: `${selectedCompany.orgNumber}-${String(lastSequence).padStart(3, "0")}`,
+        }));
+      } else {
+        setInvoice((prev) => ({ ...prev, companyFrom: value, invoiceNumber: "Auto" }));
+      }
+      return;
+    }
 
+    let newValue = value;
     if (name === "invoiceDate") {
       const parsed = new Date(value);
       if (!isNaN(parsed)) newValue = parsed.toISOString().split("T")[0];
@@ -142,17 +179,15 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       !invoice.invoiceDate ||
       invoice.items.length === 0
     ) {
+      alert("يجب ملء جميع الحقول الإلزامية وإضافة عناصر على الأقل");
       return;
     }
 
     let net = 0;
     let vat = 0;
-
     const allItems = invoice.items;
-
     allItems.forEach((item) => {
       if (item.type === "text") return;
-
       const quantity = Number(item.quantity ?? 0);
       const price = Number(item.price ?? 0);
       const discount = Number(item.discountPercent ?? 0);
@@ -183,9 +218,29 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
 
     setIsSubmitting(true);
     if (typeof onSubmit === "function") {
-      onSubmit(invoiceData);
+      await onSubmit(invoiceData);
     }
     setIsSubmitting(false);
+
+    // زيادة الرقم التسلسلي للفاتورة التالية وحفظه
+    const selectedCompany = companies.find((c) => c._id === invoice.companyFrom);
+    if (selectedCompany) {
+      const nextSeq = invoiceSequence + 1;
+      setInvoiceSequence(nextSeq);
+      saveLastInvoiceSequence(invoice.companyFrom, nextSeq);
+      
+      setInvoice((prev) => ({
+        ...prev,
+        invoiceNumber: `${selectedCompany.orgNumber}-${String(nextSeq).padStart(3, "0")}`,
+        items: [],
+        customer: "",
+        invoiceDate: "",
+        dueDate: "",
+        yourReference: "",
+        ourReference: "",
+        notes: "",
+      }));
+    }
   };
 
   return (
