@@ -188,16 +188,17 @@ export default function CompanyForm({
 
       {/* Buttons */}
       <div className="flex justify-end gap-4 pt-6 border-t border-muted">
-        <button
+        {/* <button
           type="button"
           onClick={onCancel}
           className="bg-muted hover:bg-highlight text-black font-medium px-6 py-2 rounded-lg transition"
         >
           {t("company_form.cancel_button")}
-        </button>
+        </button> */}
         <button
           type="submit"
-          className="bg-primary hover:bg-secondary text-white font-medium px-6 py-2 rounded-lg transition"
+          style={{backgroundColor:"#3D365C"}}
+          className=" hover:bg-secondary text-white font-medium px-6 py-2 rounded-lg transition"
         >
           {initialData
             ? t("company_form.update_button")

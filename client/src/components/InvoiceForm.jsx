@@ -70,7 +70,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
   // دالة للحصول على آخر رقم تسلسلي للشركة من localStorage
   const getLastInvoiceSequence = (companyId) => {
     try {
-      const sequences = JSON.parse(localStorage.getItem('invoiceSequences') || '{}');
+      const sequences = JSON.parse(localStorage.getItem("invoiceSequences") || "{}");
       return sequences[companyId] || 1;
     } catch (error) {
       console.error("Error getting last sequence:", error);
@@ -81,9 +81,9 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
   // دالة لحفظ آخر رقم تسلسلي للشركة في localStorage
   const saveLastInvoiceSequence = (companyId, sequence) => {
     try {
-      const sequences = JSON.parse(localStorage.getItem('invoiceSequences') || '{}');
+      const sequences = JSON.parse(localStorage.getItem("invoiceSequences") || "{}");
       sequences[companyId] = sequence;
-      localStorage.setItem('invoiceSequences', JSON.stringify(sequences));
+      localStorage.setItem("invoiceSequences", JSON.stringify(sequences));
     } catch (error) {
       console.error("Error saving sequence:", error);
     }
@@ -101,18 +101,18 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "companyFrom") {
       const selectedCompany = companies.find((c) => c._id === value);
       if (selectedCompany) {
         // جلب آخر رقم تسلسلي للشركة المحددة من localStorage
         const lastSequence = getLastInvoiceSequence(value);
         setInvoiceSequence(lastSequence);
-        
+
         setInvoice((prev) => ({
           ...prev,
           companyFrom: value,
-          invoiceNumber: `${selectedCompany.orgNumber}-${String(lastSequence).padStart(3, "0")}`,
+          invoiceNumber: `${selectedCompany.orgNumber}${String(lastSequence).padStart(3, "0")}`,
         }));
       } else {
         setInvoice((prev) => ({ ...prev, companyFrom: value, invoiceNumber: "Auto" }));
@@ -193,12 +193,7 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       const discount = Number(item.discountPercent ?? 0);
       const vatPercent = Number(item.vatPercent ?? 0);
 
-      if (
-        isNaN(quantity) ||
-        isNaN(price) ||
-        isNaN(discount) ||
-        isNaN(vatPercent)
-      ) {
+      if (isNaN(quantity) || isNaN(price) || isNaN(discount) || isNaN(vatPercent)) {
         return;
       }
 
@@ -228,10 +223,10 @@ export default function InvoiceForm({ onCancel, onSubmit }) {
       const nextSeq = invoiceSequence + 1;
       setInvoiceSequence(nextSeq);
       saveLastInvoiceSequence(invoice.companyFrom, nextSeq);
-      
+
       setInvoice((prev) => ({
         ...prev,
-        invoiceNumber: `${selectedCompany.orgNumber}-${String(nextSeq).padStart(3, "0")}`,
+        invoiceNumber: `${selectedCompany.orgNumber}${String(nextSeq).padStart(3, "0")}`,
         items: [],
         customer: "",
         invoiceDate: "",

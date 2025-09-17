@@ -168,7 +168,7 @@ export default function Clients() {
                 {clients.map((client, index) => (
                   <tr key={client._id} className="border-t hover:bg-gray-50">
                     <td className="py-2 px-4">{index + 1}</td>
-                    <td className="py-2 px-4 text-blue-600 font-medium underline cursor-pointer">
+                    <td className="py-2 px-4 text-black font-medium ">
                       {client.companyName}
                     </td>
                     <td className="py-2 px-4">{client.billingAddress?.city}</td>
